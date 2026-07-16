@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة العروض الذكية | وجهتك لأفضل الخصومات</title>
+    <title>بوابة العروض الذكية | تسوق بأمان ووفر أكثر</title>
     <!-- تضمين ستايل تايلوند والخطوط وأيقونات FontAwesome الاحترافية -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -15,26 +15,68 @@
 <body class="bg-gray-50 text-gray-800">
 
     <!-- شريط التنقل العلوي (Navbar) -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-100">
+    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-100">
         <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-2">
-                <span class="text-2xl">🛍️</span>
-                <span class="text-xl font-bold bg-gradient-to-l from-blue-600 to-indigo-600 bg-clip-text text-transparent">بوابة العروض الذكية</span>
+                <span class="text-3xl">🛍️</span>
+                <span class="text-xl font-extrabold bg-gradient-to-l from-blue-600 to-indigo-600 bg-clip-text text-transparent">بوابة العروض الذكية</span>
             </div>
-            <!-- شريط البحث الذكي -->
-            <div class="relative w-full md:w-80">
-                <input type="text" id="searchInput" placeholder="ابحث عن منتجك المفضل..." class="w-full pr-10 pl-4 py-2 text-sm border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
-                <span class="absolute right-3.5 top-2.5 text-gray-400"><i class="fa-solid fa-magnifying-glass"></i></span>
+            
+            <!-- أدوات التحكم والبحث -->
+            <div class="flex items-center gap-3 w-full md:w-auto">
+                <div class="relative w-full md:w-80">
+                    <input type="text" id="searchInput" placeholder="ابحث عن منتجك المفضل..." class="w-full pr-10 pl-4 py-2 text-sm border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                    <span class="absolute right-3.5 top-2.5 text-gray-400"><i class="fa-solid fa-magnifying-glass"></i></span>
+                </div>
+                <!-- زر عرض المفضلة -->
+                <button onclick="toggleFavoritesOnly()" id="favToggleBtn" class="flex items-center gap-2 px-4 py-2 text-sm font-bold text-gray-600 bg-gray-100 hover:bg-red-50 hover:text-red-600 rounded-full transition shrink-0">
+                    <i class="fa-solid fa-heart text-red-500"></i>
+                    <span class="hidden sm:inline">المفضلة</span>
+                </button>
             </div>
         </div>
     </nav>
 
     <!-- واجهة البانر الرئيسي (Hero Section) -->
-    <section class="bg-gradient-to-l from-blue-600 via-indigo-600 to-purple-700 text-white py-12 px-4 shadow-inner">
-        <div class="max-w-4xl mx-auto text-center">
-            <span class="bg-white/20 text-white text-xs font-semibold px-3.5 py-1 rounded-full backdrop-blur-sm">عروض حصرية محدودة الوقت 🔥</span>
-            <h1 class="text-3xl md:text-5xl font-extrabold mt-4 leading-tight">تسوّق بذكاء ووفر حتى 60% من ميزانيتك</h1>
-            <p class="mt-4 text-base md:text-lg text-blue-100">نحن نبحث بدلاً منك عن أفضل المنتجات مبيعاً وأعلاها تقييماً ونقدمها لك بأرخص الأسعار مع روابط شراء مباشرة وموثوقة.</p>
+    <section class="bg-gradient-to-l from-blue-600 via-indigo-600 to-purple-700 text-white py-14 px-4 shadow-inner text-center">
+        <div class="max-w-4xl mx-auto">
+            <span class="bg-white/20 text-white text-xs font-semibold px-4 py-1.5 rounded-full backdrop-blur-sm">🔥 تخفيضات وعروض حصرية محدودة</span>
+            <h1 class="text-3xl md:text-5xl font-extrabold mt-5 leading-tight">تسوّق بذكاء من كبرى المتاجر ووفر مالك</h1>
+            <p class="mt-4 text-sm md:text-base text-blue-100 max-w-2xl mx-auto">بوابتك الموثوقة لأفضل العروض والمنتجات الأكثر مبيعاً وتقييماً على منصات التسوق العالمية مع روابط شراء مباشرة آمنة.</p>
+        </div>
+    </section>
+
+    <!-- شريط أيقونات الثقة والتوجيه (Trust Badges) - يساعد المشترين جداً على الاطمئنان لشراء المنتج -->
+    <section class="max-w-6xl mx-auto px-4 -mt-8 relative z-10">
+        <div class="bg-white rounded-2xl shadow-lg p-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center border border-gray-100">
+            <div class="flex flex-col items-center">
+                <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xl mb-3">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h4 class="font-bold text-sm">روابط شراء آمنة</h4>
+                <p class="text-[11px] text-gray-400 mt-1">نوجهك مباشرة للمتاجر الرسمية الموثوقة</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center text-xl mb-3">
+                    <i class="fa-solid fa-tag"></i>
+                </div>
+                <h4 class="font-bold text-sm">أرخص الأسعار</h4>
+                <p class="text-[11px] text-gray-400 mt-1">تحديث دوري لأقوى الخصومات والفرص</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="w-12 h-12 rounded-full bg-yellow-50 text-yellow-600 flex items-center justify-center text-xl mb-3">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+                <h4 class="font-bold text-sm">منتجات مجربة</h4>
+                <p class="text-[11px] text-gray-400 mt-1">نعرض فقط المنتجات ذات التقييمات العالية</p>
+            </div>
+            <div class="flex flex-col items-center">
+                <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center text-xl mb-3">
+                    <i class="fa-solid fa-truck-fast"></i>
+                </div>
+                <h4 class="font-bold text-sm">تتبع الشحن المباشر</h4>
+                <p class="text-[11px] text-gray-400 mt-1">خيارات شحن سريعة لبلدك</p>
+            </div>
         </div>
     </section>
 
@@ -44,45 +86,46 @@
         <!-- أزرار التصنيفات التفاعلية -->
         <div class="flex flex-wrap justify-center gap-2 mb-10" id="filterContainer">
             <button onclick="filterProducts('all')" class="category-btn active bg-blue-600 text-white text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-300 shadow-sm">الكل</button>
-            <button onclick="filterProducts('electronics')" class="category-btn bg-white hover:bg-gray-100 text-gray-600 text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-300 border border-gray-200">إلكترونيات</button>
-            <button onclick="filterProducts('fashion')" class="category-btn bg-white hover:bg-gray-100 text-gray-600 text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-300 border border-gray-200">ملابس وأزياء</button>
-            <button onclick="filterProducts('home')" class="category-btn bg-white hover:bg-gray-100 text-gray-600 text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-300 border border-gray-200">مستلزمات منزلية</button>
+            <button onclick="filterProducts('electronics')" class="category-btn bg-white hover:bg-gray-100 text-gray-600 text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-300 border border-gray-200">إلكترونيات 📱</button>
+            <button onclick="filterProducts('fashion')" class="category-btn bg-white hover:bg-gray-100 text-gray-600 text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-300 border border-gray-200">ملابس وأزياء 👕</button>
+            <button onclick="filterProducts('home')" class="category-btn bg-white hover:bg-gray-100 text-gray-600 text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-300 border border-gray-200">مستلزمات منزلية 🏠</button>
         </div>
 
-        <!-- شبكة المنتجات (التي تعرض الكروت تلقائياً) -->
+        <!-- شبكة المنتجات -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="productsGrid">
-            <!-- سيتم توليد المنتجات هنا ديناميكياً بواسطة الجافاسكريبت بالأسفل -->
+            <!-- يتم توليد محتوى كروت المنتجات تلقائياً بواسطة الكود بالأسفل -->
         </div>
         
-        <!-- رسالة تظهر في حال لم يجد البحث أي منتج -->
+        <!-- رسالة الخطأ للبحث الفارغ -->
         <div id="noResults" class="hidden text-center py-12">
-            <p class="text-gray-500 text-lg">لم نعثر على أي منتجات تطابق بحثك. جرب كلمة أخرى!</p>
+            <div class="text-5xl mb-3">🔍</div>
+            <p class="text-gray-500 text-lg">لم نعثر على أي منتجات تطابق بحثك أو تفضيلاتك.</p>
         </div>
     </main>
 
-    <!-- قسم الأسئلة الشائعة التفاعلي (FAQ) -->
+    <!-- منشئ قسم الأسئلة الشائعة (FAQ) -->
     <section class="bg-white border-t border-b border-gray-100 py-16 px-4">
         <div class="max-w-3xl mx-auto">
-            <h2 class="text-2xl font-bold text-center mb-8">الأسئلة الشائعة حول تطبيقنا 🤔</h2>
+            <h2 class="text-2xl font-bold text-center mb-8">أسئلة تهمك قبل الشراء 💡</h2>
             
             <div class="space-y-4">
                 <div class="border border-gray-200 rounded-xl overflow-hidden">
                     <button class="w-full flex justify-between items-center p-5 font-semibold text-right bg-gray-50 hover:bg-gray-100 transition" onclick="toggleFaq(this)">
-                        <span>كيف تضمنون أن هذه العروض هي الأرخص؟</span>
+                        <span>كيف أطلب المنتجات بأمان؟</span>
                         <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
                     </button>
                     <div class="hidden p-5 border-t border-gray-100 text-gray-600 text-sm leading-relaxed">
-                        نقوم باستخدام خوارزميات لمراقبة الأسعار وتتبع العروض اليومية، ونعرض لك فقط السلع التي حصلت على تخفيضات حقيقية بنسبة تقييم مستخدمين تتعدى 4.5 نجوم.
+                        بمجرد ضغطك على زر "طلب العرض والخصم"، سيقوم التطبيق بتحويلك مباشرة إلى المتجر الرسمي (مثل Amazon أو AliExpress) لتكمل عملية الدفع والشراء بأمان كامل عبر خوادمهم المحمية.
                     </div>
                 </div>
 
                 <div class="border border-gray-200 rounded-xl overflow-hidden">
                     <button class="w-full flex justify-between items-center p-5 font-semibold text-right bg-gray-50 hover:bg-gray-100 transition" onclick="toggleFaq(this)">
-                        <span>هل سأدفع أي رسوم إضافية لاستخدام موقعكم؟</span>
+                        <span>هل تتوفر ميزة الدفع عند الاستلام؟</span>
                         <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
                     </button>
                     <div class="hidden p-5 border-t border-gray-100 text-gray-600 text-sm leading-relaxed">
-                        لا، خدمتنا مجانية بالكامل 100%. نحن نحصل على عمولة بسيطة ومباشرة من المتاجر الكبرى كشركاء لهم عند شرائك من روابطنا دون أن يزيد ذلك من سعر المنتج عليك نهائياً.
+                        نعم، معظم المتاجر الشريكة لنا مثل AliExpress (عبر خدمة Choice) توفر ميزة الدفع عند الاستلام للعديد من الدول العربية والمدن المغربية المختلفة.
                     </div>
                 </div>
             </div>
@@ -94,7 +137,7 @@
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
             <div class="text-center md:text-right">
                 <h3 class="text-white text-lg font-bold">بوابة العروض الذكية</h3>
-                <p class="text-xs mt-1">تسوّق بذكاء، ووفر أكثر.</p>
+                <p class="text-xs mt-1">تسوّق بذكاء واجعل ميزانيتك تدوم أطول.</p>
             </div>
             <div class="flex gap-4 text-xl">
                 <a href="#" class="hover:text-blue-500 transition"><i class="fa-brands fa-facebook"></i></a>
@@ -107,226 +150,182 @@
         </div>
     </footer>
 
-    <!-- منبثقة تنبيهات الشراء الذكية (Live Purchase Toast) -->
+    <!-- منبثقة الإشعارات الذكية والواقعية جداً لرفع نسبة مبيعاتك (Live Social Proof) -->
     <div id="purchaseToast" class="fixed bottom-4 left-4 bg-white shadow-2xl rounded-2xl p-4 flex items-center gap-3 border border-gray-100 transform translate-y-24 opacity-0 transition-all duration-700 ease-out z-50 max-w-sm">
         <div class="bg-green-100 text-green-600 w-10 h-10 rounded-full flex items-center justify-center text-lg shrink-0">
             <i class="fa-solid fa-cart-shopping"></i>
         </div>
         <div>
-            <p class="text-xs text-gray-500" id="toastUser">مستخدم من الدار البيضاء</p>
-            <p class="text-sm font-bold text-gray-800" id="toastItem">اشترى للتو: ساعة ذكية رياضية</p>
+            <p class="text-[11px] text-gray-400" id="toastUser">مستخدم من الدار البيضاء</p>
+            <p class="text-xs font-bold text-gray-800 mt-0.5" id="toastItem">اشترى للتو: سماعة لاسلكية</p>
         </div>
     </div>
 
-    <!-- ================= جافا سكريبت التفاعلية ================= -->
+    <!-- زر المساعدة والتواصل العائم الاحترافي (Support Button) -->
+    <div class="fixed bottom-4 right-4 z-50">
+        <button onclick="toggleSupportChat()" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-xl hover:scale-110 transition-transform">
+            <i class="fa-solid fa-comments"></i>
+        </button>
+        <!-- صندوق المحادثة المصغر الترحيبي المساعد للعميل -->
+        <div id="supportBox" class="hidden absolute bottom-16 right-0 bg-white rounded-2xl shadow-2xl border border-gray-100 w-72 p-5 animate-bounce-short">
+            <div class="flex items-center gap-2 border-b border-gray-100 pb-3 mb-3">
+                <div class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div>
+                <h5 class="font-bold text-sm">مساعد الصفقات الذكي 🤖</h5>
+            </div>
+            <p class="text-xs text-gray-500 leading-relaxed">أهلاً بك! أنا هنا لمساعدتك في العثور على أفضل تخفيض. هل تبحث عن جهاز معين؟</p>
+            <a href="https://wa.me/#" target="_blank" class="mt-4 block text-center bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg text-xs font-bold transition">
+                <i class="fa-brands fa-whatsapp ml-1"></i> تواصل معنا عبر واتساب
+            </a>
+        </div>
+    </div>
+
+    <!-- ================= جافا سكريبت التفاعلية والمتقدمة ================= -->
     <script>
-        // 1. قاعدة بيانات المنتجات (يمكنك تعديل هذه البيانات وروابط الأفلييت من هنا بسهولة تامة)
+        // 1. قاعدة بيانات المنتجات مع صور حقيقية عالية الدقة من Unsplash وأيقونات توجيه للمشترين
         const productsData = [
             {
+                id: 1,
                 title: "سماعات رأس لاسلكية ANC احترافية",
-                desc: "صوت محيطي نقي جداً مع ميزة عزل الضوضاء النشط وبطارية تدوم 40 ساعة متواصلة.",
+                desc: "صوت محيطي مجسم ونقي جداً مع تقنية إلغاء الضوضاء النشط المتقدمة وبطارية تدوم لـ 40 ساعة متواصلة من العمل واللعب.",
                 price: "29.99 $",
                 oldPrice: "49.99 $",
                 discount: "خصم 40%",
                 rating: 4.8,
                 reviews: 120,
                 category: "electronics",
-                image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80",
-                link: "https://www.aliexpress.com" // ضع رابط الأفلييت الخاص بك هنا
+                image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80",
+                link: "https://www.aliexpress.com", // ضع رابط الأفلييت هنا
+                badge: "🔥 الأكثر طلباً"
             },
             {
-                title: "ساعة ذكية رياضية مقاومة للماء GPS",
-                desc: "مراقبة مستمرة لنبضات القلب، تتبع النوم، تدعم أكثر من 100 وضع رياضي متقدم.",
+                id: 2,
+                title: "ساعة ذكية رياضية مقاومة للماء مع نظام GPS",
+                desc: "شاشة AMOLED شديدة الوضوح، قياس مستمر لنبضات القلب ومستوى الأكسجين، مع تتبع دقيق لأكثر من 100 تمرين رياضي ومقاومة تامة للماء.",
                 price: "19.50 $",
                 oldPrice: "35.00 $",
                 discount: "شحن مجاني",
                 rating: 4.9,
                 reviews: 85,
                 category: "electronics",
-                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80",
-                link: "https://www.amazon.com" // ضع رابط الأفلييت الخاص بك هنا
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80",
+                link: "https://www.amazon.com", // ضع رابط الأفلييت هنا
+                badge: "⚡ عرض ممتاز"
             },
             {
-                title: "قميص صيفي كاجوال قطن 100%",
-                desc: "خامة ممتازة ومريحة للغاية، متوفر بجميع المقاسات وبألوان صيفية مبهجة وعصرية.",
+                id: 3,
+                title: "قميص صيفي كاجوال قطن ناعم 100%",
+                desc: "خامة فاخرة ومريحة للغاية ومقاومة للتعرق، متوفر بمقاسات عديدة وألوان أنيقة تليق بكل الإطلالات الصيفية المعاصرة.",
                 price: "14.99 $",
                 oldPrice: "24.99 $",
                 discount: "الأكثر مبيعاً",
                 rating: 4.6,
                 reviews: 240,
                 category: "fashion",
-                image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500&q=80",
-                link: "https://www.aliexpress.com"
+                image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&q=80",
+                link: "https://www.aliexpress.com",
+                badge: "👕 صيحة صيفية"
             },
             {
+                id: 4,
                 title: "شاحن لاسلكي سريع متعدد الأجهزة 3 في 1",
-                desc: "اشحن هاتفك، ساعتك الذكية وسماعاتك اللاسلكية في آن واحد وبشاحن آمن ومنظم.",
+                desc: "تخلص من فوضى الأسلاك واشحن هاتفك، ساعتك الذكية وسماعاتك اللاسلكية في مكان واحد وبشكل منظم وبقوة شحن سريعة وآمنة.",
                 price: "12.99 $",
                 oldPrice: "19.99 $",
                 discount: "عرض اليوم",
                 rating: 4.7,
                 reviews: 95,
                 category: "electronics",
-                image: "https://images.unsplash.com/photo-1622445262465-2481c4574875?w=500&q=80",
-                link: "https://www.aliexpress.com"
+                image: "https://images.unsplash.com/photo-1622445262465-2481c4574875?w=600&q=80",
+                link: "https://www.aliexpress.com",
+                badge: "🔌 ذكي وموفر"
             },
             {
-                title: "محضرة قهوة اسبريسو محمولة ومبتكرة",
-                desc: "استمتع بقهوتك المفضلة اللذيذة في أي مكان؛ مناسبة جداً للسفر والعمل والرحلات البرية.",
+                id: 5,
+                title: "محضرة قهوة اسبريسو محمولة للرحلات والعمل",
+                desc: "استمتع بكوب قهوة كريمي غني ومثالي في أي مكان وبثوانٍ معدودة؛ جهاز سهل الاستخدام والحرارة التلقائية، مثالي جداً للتخييم والسفر.",
                 price: "24.50 $",
                 oldPrice: "39.99 $",
                 discount: "خصم 38%",
                 rating: 4.5,
                 reviews: 62,
                 category: "home",
-                image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500&q=80",
-                link: "https://www.amazon.com"
+                image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80",
+                link: "https://www.amazon.com",
+                badge: "☕ لعشاق القهوة"
             },
             {
-                title: "مصباح مكتبي ذكي لحماية العين والتركيز",
-                desc: "يحتوي على مستويات إضاءة متعددة، منفذ شحن USB، وتصميم مرن وأنيق وموفر للطاقة.",
+                id: 6,
+                title: "مصباح مكتبي ذكي مريح للعين مع منفذ USB",
+                desc: "توجيه إضاءة مرن مع حماية كاملة من الضوء الأزرق لراحة العين أثناء المذاكرة أو البرمجة الطويلة، مع 3 مستويات سطوع ذكية وشحن سريع للهاتف.",
                 price: "16.80 $",
                 oldPrice: "29.99 $",
                 discount: "مميز جداً",
                 rating: 4.8,
                 reviews: 144,
                 category: "home",
-                image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=500&q=80",
-                link: "https://www.aliexpress.com"
+                image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=600&q=80",
+                link: "https://www.aliexpress.com",
+                badge: "💡 للمكتبيين"
             }
         ];
 
-        // 2. دالة لإنشاء وعرض الكروت ديناميكياً
+        let favorites = JSON.parse(localStorage.getItem('favs')) || [];
+        let showFavoritesOnly = false;
+        let currentCategory = 'all';
+
+        // 2. دالة لإنشاء كروت المنتجات مع دعم أيقونة المفضلة والمشاركة ومميزات المشترين
         function renderProducts(products) {
             const grid = document.getElementById('productsGrid');
             const noResults = document.getElementById('noResults');
             grid.innerHTML = '';
 
-            if (products.length === 0) {
+            let listToDisplay = products;
+            if (showFavoritesOnly) {
+                listToDisplay = products.filter(p => favorites.includes(p.id));
+            }
+
+            if (listToDisplay.length === 0) {
                 noResults.classList.remove('hidden');
                 return;
             } else {
                 noResults.classList.add('hidden');
             }
 
-            products.forEach(product => {
-                const card = `
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
-                        <div>
-                            <!-- صورة المنتج والخصم -->
-                            <div class="relative h-56 w-full overflow-hidden bg-gray-100">
-                                <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
-                                <span class="absolute top-4 right-4 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">${product.discount}</span>
-                            </div>
-                            
-                            <!-- محتوى الكرت -->
-                            <div class="p-6">
-                                <div class="flex items-center gap-1 text-yellow-400 text-sm mb-2">
-                                    <i class="fa-solid fa-star"></i>
-                                    <span class="text-gray-700 font-semibold text-xs">${product.rating}</span>
-                                    <span class="text-gray-400 text-xs">(${product.reviews} تقييم)</span>
-                                </div>
-                                <h3 class="text-lg font-bold text-gray-800 hover:text-blue-600 transition duration-200 leading-snug">${product.title}</h3>
-                                <p class="text-gray-500 text-xs mt-2 leading-relaxed line-clamp-3">${product.desc}</p>
-                            </div>
-                        </div>
+            listToDisplay.forEach(product => {
+                const isFav = favorites.includes(product.id);
+                const favIconClass = isFav ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart text-gray-500 hover:text-red-500';
+                
+                // رسالة الواتساب الجاهزة عند النقر على أيقونة المشاركة
+                const shareText = encodeURIComponent(`شاهد هذا العرض الرائع على ${product.title} بسعر ${product.price} فقط! تصفح العرض من هنا: ${window.location.href}`);
 
-                        <!-- السعر والزر -->
-                        <div class="p-6 pt-0 border-t border-gray-50 mt-4 flex items-center justify-between">
-                            <div>
-                                <span class="text-xl font-extrabold text-blue-600">${product.price}</span>
-                                <span class="text-xs text-gray-400 line-through block mt-0.5">${product.oldPrice}</span>
-                            </div>
-                            <a href="${product.link}" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition duration-300 shadow-sm hover:shadow-md flex items-center gap-2">
-                                طلب العرض <i class="fa-solid fa-arrow-left text-[10px]"></i>
+                const card = `
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-150 overflow-hidden hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between relative group">
+                        
+                        <!-- أزرار تفاعلية سريعة تظهر على الصورة -->
+                        <div class="absolute top-4 left-4 z-10 flex flex-col gap-2">
+                            <!-- زر الإضافة للمفضلة -->
+                            <button onclick="toggleFavorite(${product.id})" class="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center transition hover:scale-110 active:scale-95">
+                                <i class="${favIconClass}" id="fav-icon-${product.id}"></i>
+                            </button>
+                            <!-- زر مشاركة واتساب للتسويق الفيروسي -->
+                            <a href="https://api.whatsapp.com/send?text=${shareText}" target="_blank" class="w-9 h-9 rounded-full bg-white text-green-500 shadow-md flex items-center justify-center transition hover:scale-110">
+                                <i class="fa-brands fa-whatsapp text-lg"></i>
                             </a>
                         </div>
-                    </div>
-                `;
-                grid.innerHTML += card;
-            });
-        }
 
-        // تشغيل العرض الأولي للمنتجات عند تحميل الصفحة
-        renderProducts(productsData);
-
-        // 3. نظام البحث التفاعلي
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase().trim();
-            const filtered = productsData.filter(product => 
-                product.title.toLowerCase().includes(query) || 
-                product.desc.toLowerCase().includes(query)
-            );
-            renderProducts(filtered);
-        });
-
-        // 4. نظام الفلاتر والتصنيفات
-        function filterProducts(category) {
-            // تحديث تصميم الزر النشط
-            const buttons = document.querySelectorAll('.category-btn');
-            buttons.forEach(btn => {
-                btn.classList.remove('active', 'bg-blue-600', 'text-white', 'shadow-sm');
-                btn.classList.add('bg-white', 'text-gray-600', 'border', 'border-gray-200');
-            });
-
-            // تعيين التصميم الجديد للزر النشط الحالي
-            const activeBtn = event.currentTarget;
-            activeBtn.classList.add('active', 'bg-blue-600', 'text-white', 'shadow-sm');
-            activeBtn.classList.remove('bg-white', 'text-gray-600', 'border', 'border-gray-200');
-
-            // تصفية المنتجات
-            if (category === 'all') {
-                renderProducts(productsData);
-            } else {
-                const filtered = productsData.filter(p => p.category === category);
-                renderProducts(filtered);
-            }
-        }
-
-        // 5. التحكم بفتح وإغلاق الأسئلة الشائعة (FAQ Accordion)
-        function toggleFaq(button) {
-            const content = button.nextElementSibling;
-            const icon = button.querySelector('i');
-            
-            content.classList.toggle('hidden');
-            icon.classList.toggle('rotate-180');
-        }
-
-        // 6. نظام الإشعارات الوهمية الذكي (Social Proof) لزيادة المبيعات
-        const names = ["أحمد", "ياسين", "سارة", "فاطمة", "محمد", "هدى", "أمين", "أسماء"];
-        const cities = ["الدار البيضاء", "الرباط", "مراكش", "طنجة", "فاس", "أكادير", "وجدة"];
-        const items = [
-            "سماعات رأس لاسلكية ANC",
-            "ساعة ذكية رياضية مقاومة للماء",
-            "قميص صيفي كاجوال",
-            "شاحن لاسلكي سريع 3 في 1",
-            "محضرة قهوة اسبريسو محمولة"
-        ];
-
-        function showNotification() {
-            const randomName = names[Math.floor(Math.random() * names.length)];
-            const randomCity = cities[Math.floor(Math.random() * cities.length)];
-            const randomItem = items[Math.floor(Math.random() * items.length)];
-
-            document.getElementById('toastUser').innerText = `طلب من: ${randomName} من مدينة ${randomCity}`;
-            document.getElementById('toastItem').innerText = `اشترى للتو: ${randomItem} ✅`;
-
-            const toast = document.getElementById('purchaseToast');
-            // إظهار التنبيه
-            toast.classList.remove('translate-y-24', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-
-            // إخفاءه بعد 5 ثوانٍ
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-24', 'opacity-0');
-            }, 5000);
-        }
-
-        // تفعيل التنبيه تلقائياً كل 25 ثانية لكي لا يزعج الزائر
-        setInterval(showNotification, 25000);
-        // أول تنبيه يظهر بعد 8 ثوانٍ من دخول الموقع لشد انتباه العميل
-        setTimeout(showNotification, 8000);
-    </script>
-</body>
-</html>
+                        <div>
+                            <!-- صورة المنتج وشارة الحالة المميزة -->
+                            <div class="relative h-56 w-full overflow-hidden bg-gray-100">
+                                <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                                <span class="absolute top-4 right-4 bg-red-500 text-white text-[10px] font-extrabold px-3 py-1.5 rounded-full shadow-md">${product.discount}</span>
+                                <span class="absolute bottom-3 right-3 bg-gray-900/85 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-md">${product.badge}</span>
+                            </div>
+                            
+                            <!-- محتوى الكرت ومعلومات المشتري والتقييم -->
+                            <div class="p-6">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center gap-1 text-yellow-400 text-xs">
+                                        <i class="fa-solid fa-star"></i>
+                                        <span class="text-gray-700 font-bold">${product.rating}</span>
+                                        <span class="text-gray-400">(${product.reviews} تقييم)</span>
+                                    </
