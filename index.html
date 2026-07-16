@@ -3,329 +3,448 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بوابة العروض الذكية | تسوق بأمان ووفر أكثر</title>
-    <!-- تضمين ستايل تايلوند والخطوط وأيقونات FontAwesome الاحترافية -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <title>متجر لاراش برو</title>
     <style>
-        body { font-family: 'Cairo', sans-serif; }
+        /* --- المتغيرات والتصميم العام --- */
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --accent-color: #ef4444;
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding-bottom: 60px; /* مساحة للشريط السفلي */
+        }
+
+        /* --- الهيدر (Header) --- */
+        header {
+            background-color: var(--card-bg);
+            padding: 15px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        /* --- شريط البحث والتصنيفات --- */
+        .search-box {
+            position: relative;
+            margin-top: 10px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            outline: none;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .categories {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 10px 0;
+            scrollbar-width: none; /* إخفاء شريط التمرير */
+        }
+
+        .categories::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cat-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .cat-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* --- شبكة المنتجات (Product Grid) --- */
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .product-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .product-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .product-img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            background: #f1f5f9;
+        }
+
+        .product-info {
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-main);
+        }
+
+        .product-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .price {
+            font-weight: 800;
+            color: var(--accent-color);
+            font-size: 1rem;
+        }
+
+        .add-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .add-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        /* --- النافذة المنبثقة للتفاصيل (Modal) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: flex-end; /* تفتح من الأسفل لتناسب الهواتف */
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            width: 100%;
+            max-width: 500px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 20px;
+            transform: translateY(100%);
+            transition: var(--transition);
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .modal-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+        }
+
+        .buy-now-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: var(--transition);
+        }
+
+        .buy-now-btn:hover {
+            background: var(--primary-hover);
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body>
 
-    <!-- شريط التنقل العلوي (Navbar) -->
-    <nav class="bg-white shadow-md sticky top-0 z-50 border-b border-gray-100">
-        <div class="max-w-6xl mx-auto px-4 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-2">
-                <span class="text-3xl">🛍️</span>
-                <span class="text-xl font-extrabold bg-gradient-to-l from-blue-600 to-indigo-600 bg-clip-text text-transparent">بوابة العروض الذكية</span>
-            </div>
-            
-            <!-- أدوات التحكم والبحث -->
-            <div class="flex items-center gap-3 w-full md:w-auto">
-                <div class="relative w-full md:w-80">
-                    <input type="text" id="searchInput" placeholder="ابحث عن منتجك المفضل..." class="w-full pr-10 pl-4 py-2 text-sm border border-gray-200 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-                    <span class="absolute right-3.5 top-2.5 text-gray-400"><i class="fa-solid fa-magnifying-glass"></i></span>
-                </div>
-                <!-- زر عرض المفضلة -->
-                <button onclick="toggleFavoritesOnly()" id="favToggleBtn" class="flex items-center gap-2 px-4 py-2 text-sm font-bold text-gray-600 bg-gray-100 hover:bg-red-50 hover:text-red-600 rounded-full transition shrink-0">
-                    <i class="fa-solid fa-heart text-red-500"></i>
-                    <span class="hidden sm:inline">المفضلة</span>
-                </button>
-            </div>
+    <!-- الهيدر والبحث -->
+    <header>
+        <div class="header-container">
+            <div class="logo">لاراش برو ماركت</div>
         </div>
-    </nav>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="ابحث عن منتجك المفضل...">
+        </div>
+        <div class="categories" id="categoriesContainer">
+            <button class="cat-btn active" onclick="filterCategory('الكل', this)">الكل</button>
+            <button class="cat-btn" onclick="filterCategory('إلكترونيات', this)">إلكترونيات</button>
+            <button class="cat-btn" onclick="filterCategory('ملابس', this)">ملابس</button>
+            <button class="cat-btn" onclick="filterCategory('خدمات', this)">خدمات</button>
+        </div>
+    </header>
 
-    <!-- واجهة البانر الرئيسي (Hero Section) -->
-    <section class="bg-gradient-to-l from-blue-600 via-indigo-600 to-purple-700 text-white py-14 px-4 shadow-inner text-center">
-        <div class="max-w-4xl mx-auto">
-            <span class="bg-white/20 text-white text-xs font-semibold px-4 py-1.5 rounded-full backdrop-blur-sm">🔥 تخفيضات وعروض حصرية محدودة</span>
-            <h1 class="text-3xl md:text-5xl font-extrabold mt-5 leading-tight">تسوّق بذكاء من كبرى المتاجر ووفر مالك</h1>
-            <p class="mt-4 text-sm md:text-base text-blue-100 max-w-2xl mx-auto">بوابتك الموثوقة لأفضل العروض والمنتجات الأكثر مبيعاً وتقييماً على منصات التسوق العالمية مع روابط شراء مباشرة آمنة.</p>
-        </div>
-    </section>
-
-    <!-- شريط أيقونات الثقة والتوجيه (Trust Badges) - يساعد المشترين جداً على الاطمئنان لشراء المنتج -->
-    <section class="max-w-6xl mx-auto px-4 -mt-8 relative z-10">
-        <div class="bg-white rounded-2xl shadow-lg p-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center border border-gray-100">
-            <div class="flex flex-col items-center">
-                <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-xl mb-3">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <h4 class="font-bold text-sm">روابط شراء آمنة</h4>
-                <p class="text-[11px] text-gray-400 mt-1">نوجهك مباشرة للمتاجر الرسمية الموثوقة</p>
-            </div>
-            <div class="flex flex-col items-center">
-                <div class="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center text-xl mb-3">
-                    <i class="fa-solid fa-tag"></i>
-                </div>
-                <h4 class="font-bold text-sm">أرخص الأسعار</h4>
-                <p class="text-[11px] text-gray-400 mt-1">تحديث دوري لأقوى الخصومات والفرص</p>
-            </div>
-            <div class="flex flex-col items-center">
-                <div class="w-12 h-12 rounded-full bg-yellow-50 text-yellow-600 flex items-center justify-center text-xl mb-3">
-                    <i class="fa-solid fa-star"></i>
-                </div>
-                <h4 class="font-bold text-sm">منتجات مجربة</h4>
-                <p class="text-[11px] text-gray-400 mt-1">نعرض فقط المنتجات ذات التقييمات العالية</p>
-            </div>
-            <div class="flex flex-col items-center">
-                <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center text-xl mb-3">
-                    <i class="fa-solid fa-truck-fast"></i>
-                </div>
-                <h4 class="font-bold text-sm">تتبع الشحن المباشر</h4>
-                <p class="text-[11px] text-gray-400 mt-1">خيارات شحن سريعة لبلدك</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- قسم الفلاتر والمنتجات التفاعلي -->
-    <main class="max-w-6xl mx-auto px-4 py-12">
-        
-        <!-- أزرار التصنيفات التفاعلية -->
-        <div class="flex flex-wrap justify-center gap-2 mb-10" id="filterContainer">
-            <button onclick="filterProducts('all')" class="category-btn active bg-blue-600 text-white text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-300 shadow-sm">الكل</button>
-            <button onclick="filterProducts('electronics')" class="category-btn bg-white hover:bg-gray-100 text-gray-600 text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-300 border border-gray-200">إلكترونيات 📱</button>
-            <button onclick="filterProducts('fashion')" class="category-btn bg-white hover:bg-gray-100 text-gray-600 text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-300 border border-gray-200">ملابس وأزياء 👕</button>
-            <button onclick="filterProducts('home')" class="category-btn bg-white hover:bg-gray-100 text-gray-600 text-sm font-semibold px-6 py-2.5 rounded-full transition-all duration-300 border border-gray-200">مستلزمات منزلية 🏠</button>
-        </div>
-
-        <!-- شبكة المنتجات -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8" id="productsGrid">
-            <!-- يتم توليد محتوى كروت المنتجات تلقائياً بواسطة الكود بالأسفل -->
-        </div>
-        
-        <!-- رسالة الخطأ للبحث الفارغ -->
-        <div id="noResults" class="hidden text-center py-12">
-            <div class="text-5xl mb-3">🔍</div>
-            <p class="text-gray-500 text-lg">لم نعثر على أي منتجات تطابق بحثك أو تفضيلاتك.</p>
+    <!-- قائمة المنتجات -->
+    <main>
+        <div class="products-grid" id="productsGrid">
+            <!-- سيتم توليد المنتجات هنا ديناميكياً بواسطة JavaScript -->
         </div>
     </main>
 
-    <!-- منشئ قسم الأسئلة الشائعة (FAQ) -->
-    <section class="bg-white border-t border-b border-gray-100 py-16 px-4">
-        <div class="max-w-3xl mx-auto">
-            <h2 class="text-2xl font-bold text-center mb-8">أسئلة تهمك قبل الشراء 💡</h2>
-            
-            <div class="space-y-4">
-                <div class="border border-gray-200 rounded-xl overflow-hidden">
-                    <button class="w-full flex justify-between items-center p-5 font-semibold text-right bg-gray-50 hover:bg-gray-100 transition" onclick="toggleFaq(this)">
-                        <span>كيف أطلب المنتجات بأمان؟</span>
-                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
-                    </button>
-                    <div class="hidden p-5 border-t border-gray-100 text-gray-600 text-sm leading-relaxed">
-                        بمجرد ضغطك على زر "طلب العرض والخصم"، سيقوم التطبيق بتحويلك مباشرة إلى المتجر الرسمي (مثل Amazon أو AliExpress) لتكمل عملية الدفع والشراء بأمان كامل عبر خوادمهم المحمية.
-                    </div>
-                </div>
-
-                <div class="border border-gray-200 rounded-xl overflow-hidden">
-                    <button class="w-full flex justify-between items-center p-5 font-semibold text-right bg-gray-50 hover:bg-gray-100 transition" onclick="toggleFaq(this)">
-                        <span>هل تتوفر ميزة الدفع عند الاستلام؟</span>
-                        <i class="fa-solid fa-chevron-down text-gray-400 transition-transform duration-300"></i>
-                    </button>
-                    <div class="hidden p-5 border-t border-gray-100 text-gray-600 text-sm leading-relaxed">
-                        نعم، معظم المتاجر الشريكة لنا مثل AliExpress (عبر خدمة Choice) توفر ميزة الدفع عند الاستلام للعديد من الدول العربية والمدن المغربية المختلفة.
-                    </div>
-                </div>
+    <!-- نافذة تفاصيل المنتج -->
+    <div class="modal-overlay" id="productModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h3 id="modalTitle">اسم المنتج</h3>
+                <button class="close-btn" onclick="toggleModal()">&times;</button>
             </div>
-        </div>
-    </section>
-
-    <!-- فوتر احترافي (Footer) -->
-    <footer class="bg-gray-900 text-gray-400 py-12 px-4 border-t border-gray-800">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-            <div class="text-center md:text-right">
-                <h3 class="text-white text-lg font-bold">بوابة العروض الذكية</h3>
-                <p class="text-xs mt-1">تسوّق بذكاء واجعل ميزانيتك تدوم أطول.</p>
+            <img src="" alt="" id="modalImg" class="modal-img">
+            <p id="modalDesc" style="color: var(--text-muted); line-height: 1.6; margin-bottom: 15px;"></p>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span>السعر:</span>
+                <span id="modalPrice" style="font-size: 1.3rem; font-weight: 800; color: var(--accent-color);"></span>
             </div>
-            <div class="flex gap-4 text-xl">
-                <a href="#" class="hover:text-blue-500 transition"><i class="fa-brands fa-facebook"></i></a>
-                <a href="#" class="hover:text-pink-500 transition"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#" class="hover:text-black transition"><i class="fa-brands fa-tiktok"></i></a>
-            </div>
-        </div>
-        <div class="text-center text-xs mt-8 pt-8 border-t border-gray-800">
-            جميع الحقوق محفوظة © بوابة العروض الذكية
-        </div>
-    </footer>
-
-    <!-- منبثقة الإشعارات الذكية والواقعية جداً لرفع نسبة مبيعاتك (Live Social Proof) -->
-    <div id="purchaseToast" class="fixed bottom-4 left-4 bg-white shadow-2xl rounded-2xl p-4 flex items-center gap-3 border border-gray-100 transform translate-y-24 opacity-0 transition-all duration-700 ease-out z-50 max-w-sm">
-        <div class="bg-green-100 text-green-600 w-10 h-10 rounded-full flex items-center justify-center text-lg shrink-0">
-            <i class="fa-solid fa-cart-shopping"></i>
-        </div>
-        <div>
-            <p class="text-[11px] text-gray-400" id="toastUser">مستخدم من الدار البيضاء</p>
-            <p class="text-xs font-bold text-gray-800 mt-0.5" id="toastItem">اشترى للتو: سماعة لاسلكية</p>
+            <button class="buy-now-btn" onclick="orderViaWhatsApp()">اطلب الآن عبر واتساب</button>
         </div>
     </div>
 
-    <!-- زر المساعدة والتواصل العائم الاحترافي (Support Button) -->
-    <div class="fixed bottom-4 right-4 z-50">
-        <button onclick="toggleSupportChat()" class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-xl hover:scale-110 transition-transform">
-            <i class="fa-solid fa-comments"></i>
-        </button>
-        <!-- صندوق المحادثة المصغر الترحيبي المساعد للعميل -->
-        <div id="supportBox" class="hidden absolute bottom-16 right-0 bg-white rounded-2xl shadow-2xl border border-gray-100 w-72 p-5 animate-bounce-short">
-            <div class="flex items-center gap-2 border-b border-gray-100 pb-3 mb-3">
-                <div class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div>
-                <h5 class="font-bold text-sm">مساعد الصفقات الذكي 🤖</h5>
-            </div>
-            <p class="text-xs text-gray-500 leading-relaxed">أهلاً بك! أنا هنا لمساعدتك في العثور على أفضل تخفيض. هل تبحث عن جهاز معين؟</p>
-            <a href="https://wa.me/#" target="_blank" class="mt-4 block text-center bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg text-xs font-bold transition">
-                <i class="fa-brands fa-whatsapp ml-1"></i> تواصل معنا عبر واتساب
-            </a>
-        </div>
-    </div>
-
-    <!-- ================= جافا سكريبت التفاعلية والمتقدمة ================= -->
     <script>
-        // 1. قاعدة بيانات المنتجات مع صور حقيقية عالية الدقة من Unsplash وأيقونات توجيه للمشترين
-        const productsData = [
+        // --- قاعدة بيانات المنتجات التجريبية ---
+        const products = [
             {
                 id: 1,
-                title: "سماعات رأس لاسلكية ANC احترافية",
-                desc: "صوت محيطي مجسم ونقي جداً مع تقنية إلغاء الضوضاء النشط المتقدمة وبطارية تدوم لـ 40 ساعة متواصلة من العمل واللعب.",
-                price: "29.99 $",
-                oldPrice: "49.99 $",
-                discount: "خصم 40%",
-                rating: 4.8,
-                reviews: 120,
-                category: "electronics",
-                image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&q=80",
-                link: "https://www.aliexpress.com", // ضع رابط الأفلييت هنا
-                badge: "🔥 الأكثر طلباً"
+                title: "سماعات لاسلكية برو",
+                category: "إلكترونيات",
+                price: "250 درهم",
+                desc: "سماعات عازلة للصوت بجودة صوت عالية الاستيريو، تدوم بطاريتها حتى 18 ساعة متواصلة مع علبة شحن ذكية.",
+                img: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500"
             },
             {
                 id: 2,
-                title: "ساعة ذكية رياضية مقاومة للماء مع نظام GPS",
-                desc: "شاشة AMOLED شديدة الوضوح، قياس مستمر لنبضات القلب ومستوى الأكسجين، مع تتبع دقيق لأكثر من 100 تمرين رياضي ومقاومة تامة للماء.",
-                price: "19.50 $",
-                oldPrice: "35.00 $",
-                discount: "شحن مجاني",
-                rating: 4.9,
-                reviews: 85,
-                category: "electronics",
-                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&q=80",
-                link: "https://www.amazon.com", // ضع رابط الأفلييت هنا
-                badge: "⚡ عرض ممتاز"
+                title: "ساعة يد ذكية مقاومة للماء",
+                category: "إلكترونيات",
+                price: "399 درهم",
+                desc: "تتبع نشاطك الرياضي، نبضات القلب، وتلقى الإشعارات مباشرة على معصمك مع شاشة AMOLED عالية الوضوح.",
+                img: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500"
             },
             {
                 id: 3,
-                title: "قميص صيفي كاجوال قطن ناعم 100%",
-                desc: "خامة فاخرة ومريحة للغاية ومقاومة للتعرق، متوفر بمقاسات عديدة وألوان أنيقة تليق بكل الإطلالات الصيفية المعاصرة.",
-                price: "14.99 $",
-                oldPrice: "24.99 $",
-                discount: "الأكثر مبيعاً",
-                rating: 4.6,
-                reviews: 240,
-                category: "fashion",
-                image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=600&q=80",
-                link: "https://www.aliexpress.com",
-                badge: "👕 صيحة صيفية"
+                title: "سترة رياضية عصرية",
+                category: "ملابس",
+                price: "180 درهم",
+                desc: "سترة خفيفة الوزن ومريحة ومثالية للجري والأنشطة اليومية، متوفرة بجميع المقاسات.",
+                img: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500"
             },
             {
                 id: 4,
-                title: "شاحن لاسلكي سريع متعدد الأجهزة 3 في 1",
-                desc: "تخلص من فوضى الأسلاك واشحن هاتفك، ساعتك الذكية وسماعاتك اللاسلكية في مكان واحد وبشكل منظم وبقوة شحن سريعة وآمنة.",
-                price: "12.99 $",
-                oldPrice: "19.99 $",
-                discount: "عرض اليوم",
-                rating: 4.7,
-                reviews: 95,
-                category: "electronics",
-                image: "https://images.unsplash.com/photo-1622445262465-2481c4574875?w=600&q=80",
-                link: "https://www.aliexpress.com",
-                badge: "🔌 ذكي وموفر"
-            },
-            {
-                id: 5,
-                title: "محضرة قهوة اسبريسو محمولة للرحلات والعمل",
-                desc: "استمتع بكوب قهوة كريمي غني ومثالي في أي مكان وبثوانٍ معدودة؛ جهاز سهل الاستخدام والحرارة التلقائية، مثالي جداً للتخييم والسفر.",
-                price: "24.50 $",
-                oldPrice: "39.99 $",
-                discount: "خصم 38%",
-                rating: 4.5,
-                reviews: 62,
-                category: "home",
-                image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=600&q=80",
-                link: "https://www.amazon.com",
-                badge: "☕ لعشاق القهوة"
-            },
-            {
-                id: 6,
-                title: "مصباح مكتبي ذكي مريح للعين مع منفذ USB",
-                desc: "توجيه إضاءة مرن مع حماية كاملة من الضوء الأزرق لراحة العين أثناء المذاكرة أو البرمجة الطويلة، مع 3 مستويات سطوع ذكية وشحن سريع للهاتف.",
-                price: "16.80 $",
-                oldPrice: "29.99 $",
-                discount: "مميز جداً",
-                rating: 4.8,
-                reviews: 144,
-                category: "home",
-                image: "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=600&q=80",
-                link: "https://www.aliexpress.com",
-                badge: "💡 للمكتبيين"
+                title: "تطوير تطبيقات الموبايل",
+                category: "خدمات",
+                price: "اتصل لتحديد السعر",
+                desc: "نصمم ونبرمج لك تطبيق متجرك الخاص باحترافية عالية ليعمل على نظام أندرويد بكفاءة ممتازة.",
+                img: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500"
             }
         ];
 
-        let favorites = JSON.parse(localStorage.getItem('favs')) || [];
-        let showFavoritesOnly = false;
-        let currentCategory = 'all';
+        let selectedProduct = null;
 
-        // 2. دالة لإنشاء كروت المنتجات مع دعم أيقونة المفضلة والمشاركة ومميزات المشترين
-        function renderProducts(products) {
+        // --- توليد المنتجات في الصفحة ---
+        function displayProducts(items) {
             const grid = document.getElementById('productsGrid');
-            const noResults = document.getElementById('noResults');
             grid.innerHTML = '';
-
-            let listToDisplay = products;
-            if (showFavoritesOnly) {
-                listToDisplay = products.filter(p => favorites.includes(p.id));
-            }
-
-            if (listToDisplay.length === 0) {
-                noResults.classList.remove('hidden');
+            
+            if(items.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px 0;">لم يتم العثور على منتجات.</p>`;
                 return;
-            } else {
-                noResults.classList.add('hidden');
             }
 
-            listToDisplay.forEach(product => {
-                const isFav = favorites.includes(product.id);
-                const favIconClass = isFav ? 'fa-solid fa-heart text-red-500' : 'fa-regular fa-heart text-gray-500 hover:text-red-500';
-                
-                // رسالة الواتساب الجاهزة عند النقر على أيقونة المشاركة
-                const shareText = encodeURIComponent(`شاهد هذا العرض الرائع على ${product.title} بسعر ${product.price} فقط! تصفح العرض من هنا: ${window.location.href}`);
-
-                const card = `
-                    <div class="bg-white rounded-2xl shadow-sm border border-gray-150 overflow-hidden hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col justify-between relative group">
-                        
-                        <!-- أزرار تفاعلية سريعة تظهر على الصورة -->
-                        <div class="absolute top-4 left-4 z-10 flex flex-col gap-2">
-                            <!-- زر الإضافة للمفضلة -->
-                            <button onclick="toggleFavorite(${product.id})" class="w-9 h-9 rounded-full bg-white shadow-md flex items-center justify-center transition hover:scale-110 active:scale-95">
-                                <i class="${favIconClass}" id="fav-icon-${product.id}"></i>
-                            </button>
-                            <!-- زر مشاركة واتساب للتسويق الفيروسي -->
-                            <a href="https://api.whatsapp.com/send?text=${shareText}" target="_blank" class="w-9 h-9 rounded-full bg-white text-green-500 shadow-md flex items-center justify-center transition hover:scale-110">
-                                <i class="fa-brands fa-whatsapp text-lg"></i>
-                            </a>
+            items.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => openProduct(product);
+                card.innerHTML = `
+                    <img src="${product.img}" alt="${product.title}" class="product-img">
+                    <div class="product-info">
+                        <h4 class="product-title">${product.title}</h4>
+                        <p class="product-desc">${product.desc}</p>
+                        <div class="product-price-row">
+                            <span class="price">${product.price}</span>
+                            <button class="add-btn" onclick="event.stopPropagation(); openProduct(${JSON.stringify(product).replace(/"/g, '&quot;')})">+</button>
                         </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
 
-                        <div>
-                            <!-- صورة المنتج وشارة الحالة المميزة -->
-                            <div class="relative h-56 w-full overflow-hidden bg-gray-100">
-                                <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
-                                <span class="absolute top-4 right-4 bg-red-500 text-white text-[10px] font-extrabold px-3 py-1.5 rounded-full shadow-md">${product.discount}</span>
-                                <span class="absolute bottom-3 right-3 bg-gray-900/85 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-md">${product.badge}</span>
-                            </div>
-                            
-                            <!-- محتوى الكرت ومعلومات المشتري والتقييم -->
-                            <div class="p-6">
-                                <div class="flex items-center justify-between mb-2">
-                                    <div class="flex items-center gap-1 text-yellow-400 text-xs">
-                                        <i class="fa-solid fa-star"></i>
-                                        <span class="text-gray-700 font-bold">${product.rating}</span>
-                                        <span class="text-gray-400">(${product.reviews} تقييم)</span>
-                                    </
+        // --- الفلترة والتصنيفات ---
+        function filterCategory(category, button) {
+            // تغيير الزر النشط
+            document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            if(category === 'الكل') {
+                displayProducts(products);
+            } else {
+                const filtered = products.filter(p => p.category === category);
+                displayProducts(filtered);
+            }
+        }
+
+        // --- البحث الديناميكي ---
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            const filtered = products.filter(p => 
+                p.title.toLowerCase().includes(query) || 
+                p.desc.toLowerCase().includes(query)
+            );
+            displayProducts(filtered);
+        });
+
+        // --- فتح وإغلاق النافذة المنبثقة ---
+        function openProduct(product) {
+            selectedProduct = product;
+            document.getElementById('modalTitle').innerText = product.title;
+            document.getElementById('modalImg').src = product.img;
+            document.getElementById('modalDesc').innerText = product.desc;
+            document.getElementById('modalPrice').innerText = product.price;
+            
+            document.getElementById('productModal').classList.add('active');
+        }
+
+        function closeModal(event) {
+            if(event.target === document.getElementById('productModal')) {
+                toggleModal();
+            }
+        }
+
+        function toggleModal() {
+            document.getElementById('productModal').classList.remove('active');
+        }
+
+        // --- إرسال الطلب عبر الواتساب ---
+        function orderViaWhatsApp() {
+            if(!selectedProduct) return;
+            const phoneNumber = "212600000000"; // ضع رقمك هنا بصيغة دولية
+            const message = `مرحباً، أود طلب المنتج التالي:\n- الاسم: ${selectedProduct.title}\n- السعر: ${selectedProduct.price}`;
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, '_blank');
+        }
+
+        // التشغيل الأولي
+        displayProducts(products);
+    </script>
+</body>
+</html>
