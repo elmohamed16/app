@@ -1,346 +1,192 @@
-<!-- 1 --> <!DOCTYPE html>
-<!-- 2 --> <html lang="ar" dir="rtl">
-<!-- 3 --> <head>
-<!-- 4 --> <meta charset="UTF-8">
-<!-- 5 --> <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- 6 --> <title>العرائش ماركت</title>
-<!-- 7 --> <style>
-<!-- 8 --> :root{--primary:#2563eb;--hover:#1d4ed8;--bg:#f8fafc;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--accent:#ef4444;--radius:12px;--trans:all 0.3s}
-<!-- 9 --> *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
-<!-- 10 --> body{background:var(--bg);color:var(--text);padding-bottom:60px;position:relative}
-<!-- 11 --> header{background:var(--card);padding:15px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,0.05);border-bottom:1px solid var(--border)}
-<!-- 12 --> .header-container{display:flex;justify-content:space-between;align-items:center;max-width:800px;margin:0 auto}
-<!-- 13 --> .logo{font-size:1.2rem;font-weight:800;color:var(--primary)}
-<!-- 14 --> .publish-btn{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-size:.9rem;font-weight:600;cursor:pointer;transition:var(--trans);display:flex;align-items:center;gap:6px}
-<!-- 15 --> .publish-btn:hover{background:var(--hover);transform:scale(1.02)}
-<!-- 16 --> .search-box{margin-top:10px}
-<!-- 17 --> .search-box input{width:100%;padding:12px 40px 12px 15px;border:1px solid var(--border);border-radius:var(--radius);outline:none;font-size:.95rem;transition:var(--trans)}
-<!-- 18 --> .search-box input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,0.15)}
-<!-- 19 --> .categories{display:flex;gap:10px;overflow-x:auto;padding:10px 0;scrollbar-width:none}
-<!-- 20 --> .categories::-webkit-scrollbar{display:none}
-<!-- 21 --> .cat-btn{background:var(--card);border:1px solid var(--border);padding:8px 16px;border-radius:20px;font-size:.85rem;white-space:nowrap;cursor:pointer;transition:var(--trans)}
-<!-- 22 --> .cat-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
-<!-- 23 --> main{max-width:800px;margin:0 auto;padding:15px}
-<!-- 24 --> .products-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
-<!-- 25 --> .product-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:var(--trans);cursor:pointer}
-<!-- 26 --> .product-card:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,0.05)}
-<!-- 27 --> .product-img{width:100%;height:140px;object-fit:cover;background:#f1f5f9}
-<!-- 28 --> .product-info{padding:12px;display:flex;flex-direction:column;flex-grow:1}
-<!-- 29 --> .product-title{font-size:.95rem;font-weight:700;margin-bottom:5px;color:var(--text)}
-<!-- 30 --> .product-desc{font-size:.8rem;color:var(--muted);margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-<!-- 31 --> .product-price-row{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
-<!-- 32 --> .price{font-weight:800;color:var(--accent);font-size:1rem}
-<!-- 33 --> .add-btn{background:var(--primary);color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--trans)}
-<!-- 34 --> .add-btn:hover{background:var(--hover)}
-<!-- 35 --> .modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:var(--trans);z-index:1000}
-<!-- 36 --> .modal-overlay.active{opacity:1;pointer-events:auto}
-<!-- 37 --> .modal-content{background:var(--card);width:100%;max-width:500px;border-top-left-radius:20px;border-top-right-radius:20px;padding:20px;transform:translateY(100%);transition:var(--trans);max-height:85vh;overflow-y:auto}
-<!-- 38 --> .modal-overlay.active .modal-content{transform:translateY(0)}
-<!-- 39 --> .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
-<!-- 40 --> .close-btn{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted)}
-<!-- 41 --> .modal-img{width:100%;height:220px;object-fit:cover;border-radius:var(--radius);margin-bottom:10px}
-<!-- 42 --> .gallery-thumbs{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;scrollbar-width:none}
-<!-- 43 --> .gallery-thumbs::-webkit-scrollbar{display:none}
-<!-- 44 --> .gallery-thumbs img{width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:var(--trans);flex-shrink:0}
-<!-- 45 --> .gallery-thumbs img.active-thumb{border-color:var(--primary)}
-<!-- 46 --> .buy-now-btn{background:var(--primary);color:#fff;border:none;width:100%;padding:14px;border-radius:var(--radius);font-size:1rem;font-weight:700;cursor:pointer;margin-top:20px;transition:var(--trans)}
-<!-- 47 --> .buy-now-btn:hover{background:var(--hover)}
-<!-- 48 --> .publish-form label{display:block;font-weight:600;margin-top:12px;margin-bottom:4px;font-size:.9rem}
-<!-- 49 --> .publish-form input,.publish-form textarea,.publish-form select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:.95rem;background:var(--bg);transition:var(--trans)}
-<!-- 50 --> .publish-form input:focus,.publish-form textarea:focus,.publish-form select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,0.15);background:#fff}
-<!-- 51 --> .publish-form textarea{resize:vertical;min-height:80px}
-<!-- 52 --> .publish-form .file-input-wrapper{margin-top:8px}
-<!-- 53 --> .publish-form .file-input-wrapper label{font-weight:400;font-size:.85rem;color:var(--muted)}
-<!-- 54 --> .publish-form .file-preview{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
-<!-- 55 --> .publish-form .file-preview img{width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--border)}
-<!-- 56 --> .submit-btn{background:var(--primary);color:#fff;border:none;width:100%;padding:14px;border-radius:var(--radius);font-size:1rem;font-weight:700;cursor:pointer;margin-top:20px;transition:var(--trans)}
-<!-- 57 --> .submit-btn:hover{background:var(--hover)}
-<!-- 58 --> .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;padding:12px 24px;border-radius:var(--radius);font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.15);opacity:0;transition:opacity .4s;z-index:2000;pointer-events:none}
-<!-- 59 --> .toast.show{opacity:1}
-<!-- 60 --> .popup-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:3000;opacity:0;pointer-events:none;transition:opacity .4s}
-<!-- 61 --> .popup-overlay.active{opacity:1;pointer-events:auto}
-<!-- 62 --> .popup-box{background:var(--card);max-width:400px;width:90%;border-radius:20px;padding:25px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.3);transform:scale(0.8);transition:transform .4s;position:relative}
-<!-- 63 --> .popup-overlay.active .popup-box{transform:scale(1)}
-<!-- 64 --> .popup-box img{width:100%;height:180px;object-fit:cover;border-radius:12px;margin-bottom:15px}
-<!-- 65 --> .popup-box h2{color:var(--primary);margin-bottom:8px}
-<!-- 66 --> .popup-box p{color:var(--muted);margin-bottom:15px;line-height:1.6}
-<!-- 67 --> .popup-box .popup-btn{background:var(--primary);color:#fff;border:none;padding:10px 30px;border-radius:25px;font-size:1rem;font-weight:600;cursor:pointer;transition:var(--trans)}
-<!-- 68 --> .popup-box .popup-btn:hover{background:var(--hover);transform:scale(1.05)}
-<!-- 69 --> .popup-box .popup-close{background:none;border:none;font-size:1.8rem;cursor:pointer;color:var(--muted);position:absolute;top:8px;left:15px}
-<!-- 70 --> </style>
-<!-- 71 --> </head>
-<!-- 72 --> <body>
-<!-- 73 --> <header>
-<!-- 74 --> <div class="header-container">
-<!-- 75 --> <div class="logo">🛒 العرائش ماركت</div>
-<!-- 76 --> <button class="publish-btn" onclick="openPublish()">➕ نشر منتج</button>
-<!-- 77 --> </div>
-<!-- 78 --> <div class="search-box"><input type="text" id="search" placeholder="ابحث عن منتجك المفضل..."></div>
-<!-- 79 --> <div class="categories" id="cats">
-<!-- 80 --> <button class="cat-btn active" onclick="filter('الكل',this)">الكل</button>
-<!-- 81 --> <button class="cat-btn" onclick="filter('إلكترونيات',this)">إلكترونيات</button>
-<!-- 82 --> <button class="cat-btn" onclick="filter('ملابس',this)">ملابس</button>
-<!-- 83 --> <button class="cat-btn" onclick="filter('خدمات',this)">خدمات</button>
-<!-- 84 --> <button class="cat-btn" onclick="filter('أخرى',this)">أخرى</button>
-<!-- 85 --> </div>
-<!-- 86 --> </header>
-<!-- 87 --> <main><div class="products-grid" id="grid"></div></main>
-<!-- 88 --> <div class="modal-overlay" id="detailModal" onclick="closeDetail(event)">
-<!-- 89 --> <div class="modal-content" onclick="event.stopPropagation()">
-<!-- 90 --> <div class="modal-header"><h3 id="dTitle"></h3><button class="close-btn" onclick="closeDetail()">&times;</button></div>
-<!-- 91 --> <div id="galleryContainer">
-<!-- 92 --> <img src="" id="dImg" class="modal-img">
-<!-- 93 --> <div class="gallery-thumbs" id="dThumbs"></div>
-<!-- 94 --> </div>
-<!-- 95 --> <p id="dDesc" style="color:var(--muted);line-height:1.6;margin-bottom:15px"></p>
-<!-- 96 --> <div style="display:flex;justify-content:space-between;align-items:center"><span>السعر:</span><span id="dPrice" style="font-size:1.3rem;font-weight:800;color:var(--accent)"></span></div>
-<!-- 97 --> <button class="buy-now-btn" onclick="order()">اطلب الآن عبر واتساب</button>
-<!-- 98 --> </div>
-<!-- 99 --> </div>
-<!-- 100 --> <div class="modal-overlay" id="publishModal" onclick="closePublish(event)">
-<!-- 101 --> <div class="modal-content" onclick="event.stopPropagation()">
-<!-- 102 --> <div class="modal-header"><h3>📦 نشر منتج جديد</h3><button class="close-btn" onclick="closePublish()">&times;</button></div>
-<!-- 103 --> <form class="publish-form" id="pubForm" onsubmit="handlePublish(event)">
-<!-- 104 --> <label>اسم المنتج *</label><input type="text" id="pTitle" required>
-<!-- 105 --> <label>الفئة *</label><select id="pCat" required><option>إلكترونيات</option><option>ملابس</option><option>خدمات</option><option>أخرى</option></select>
-<!-- 106 --> <label>السعر *</label><input type="text" id="pPrice" required>
-<!-- 107 --> <label>الوصف *</label><textarea id="pDesc" required></textarea>
-<!-- 108 --> <div class="file-input-wrapper"><label>الصورة الأساسية *</label><input type="file" id="pImg1" accept="image/*" required onchange="previewImage(this,'preview1')"><div class="file-preview" id="preview1"></div></div>
-<!-- 109 --> <div class="file-input-wrapper"><label>صورة إضافية 2 (اختياري)</label><input type="file" id="pImg2" accept="image/*" onchange="previewImage(this,'preview2')"><div class="file-preview" id="preview2"></div></div>
-<!-- 110 --> <div class="file-input-wrapper"><label>صورة إضافية 3 (اختياري)</label><input type="file" id="pImg3" accept="image/*" onchange="previewImage(this,'preview3')"><div class="file-preview" id="preview3"></div></div>
-<!-- 111 --> <div class="file-input-wrapper"><label>صورة إضافية 4 (اختياري)</label><input type="file" id="pImg4" accept="image/*" onchange="previewImage(this,'preview4')"><div class="file-preview" id="preview4"></div></div>
-<!-- 112 --> <label>رقم الهاتف (واتساب) *</label><input type="tel" id="pPhone" required>
-<!-- 113 --> <button type="submit" class="submit-btn">✅ نشر المنتج</button>
-<!-- 114 --> </form>
-<!-- 115 --> </div>
-<!-- 116 --> </div>
-<!-- 117 --> <div class="popup-overlay" id="popupOverlay">
-<!-- 118 --> <div class="popup-box">
-<!-- 119 --> <button class="popup-close" onclick="closePopup()">&times;</button>
-<!-- 120 --> <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500" alt="عرض خاص">
-<!-- 121 --> <h2>🎉 عروض رائجة!</h2>
-<!-- 122 --> <p>خصم يصل إلى 50% على مجموعة مختارة من المنتجات الإلكترونية والملابس. العرض محدود، سارع بالطلب!</p>
-<!-- 123 --> <button class="popup-btn" onclick="closePopup()">تسوق الآن</button>
-<!-- 124 --> </div>
-<!-- 125 --> </div>
-<!-- 126 --> <div class="toast" id="toast">تم النشر!</div>
-<!-- 127 --> <script>
-// 128 const defaultProducts = [
-// 129 {id:1, title:"سماعة لاسلكية برو", category:"إلكترونيات", price:"250 درهم",
-// 130 desc:"سماعة عازلة للصوت بجودة استيريو، تدوم 18 ساعة مع علبة شحن ذكية.",
-// 131 images:["https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500","https://images.unsplash.com/photo-1583394838336-acd977736f90?w=500","https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?w=500","https://images.unsplash.com/photo-1560343090-f0409e92791a?w=500"],
-// 132 phone:"212600000000"},
-// 133 {id:2, title:"ساعة ذكية AMOLED", category:"إلكترونيات", price:"399 درهم",
-// 134 desc:"تتبع النشاط، نبضات القلب، وإشعارات الهاتف بشاشة AMOLED مقاومة للماء.",
-// 135 images:["https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500","https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=500","https://images.unsplash.com/photo-1523398002811-999ca8dec234?w=500","https://images.unsplash.com/photo-1558126319-c9feecbf57ee?w=500"],
-// 136 phone:"212600000000"},
-// 137 {id:3, title:"سترة رياضية خفيفة", category:"ملابس", price:"180 درهم",
-// 138 desc:"سترة مريحة للجري والأنشطة اليومية، مصنوعة من قماش ناعم، متوفرة بجميع المقاسات.",
-// 139 images:["https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500","https://images.unsplash.com/photo-1578587018450-5a00f5f2f4f5?w=500","https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500","https://images.unsplash.com/photo-1556905055-8f358a7a47b2?w=500"],
-// 140 phone:"212600000000"},
-// 141 {id:4, title:"تطوير تطبيقات موبايل", category:"خدمات", price:"اتصل لتحديد السعر",
-// 142 desc:"نصمم ونبرمج تطبيق متجرك الخاص لأندرويد وiOS بكفاءة عالية واحترافية.",
-// 143 images:["https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500","https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500","https://images.unsplash.com/photo-1516259762381-22954d7d3ad2?w=500","https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=500"],
-// 144 phone:"212600000000"},
-// 145 {id:5, title:"هاتف 5G 128GB", category:"إلكترونيات", price:"2800 درهم",
-// 146 desc:"هاتف بشاشة 6.5 بوصة، كاميرا خلفية ثلاثية بدقة 48 ميجابكسل، بطارية 4500 مللي أمبير.",
-// 147 images:["https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500","https://images.unsplash.com/photo-1589578228447-e1a4e481c6c8?w=500","https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=500","https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500"],
-// 148 phone:"212600000000"},
-// 149 {id:6, title:"تابلت للدراسة", category:"إلكترونيات", price:"1200 درهم",
-// 150 desc:"شاشة 10.4 بوصة، معالج ثماني النواة، ذاكرة 4 جيجا رام، مناسب للمذاكرة ومشاهدة الفيديوهات.",
-// 151 images:["https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?w=500","https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500","https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=500","https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?w=500"],
-// 152 phone:"212600000000"},
-// 153 {id:7, title:"حقيبة ظهر للابتوب", category:"ملابس", price:"220 درهم",
-// 154 desc:"حقيبة عملية بمقصورات متعددة لحماية اللابتوب حتى 15.6 بوصة، مع حزام كتف مريح.",
-// 155 images:["https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500","https://images.unsplash.com/photo-1544816155-12df9643f363?w=500","https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500","https://images.unsplash.com/photo-1544816155-12df9643f363?w=500"],
-// 156 phone:"212600000000"},
-// 157 {id:8, title:"تصميم شعارات احترافية", category:"خدمات", price:"350 درهم",
-// 158 desc:"نصمم لك شعاراً عصرياً وفريداً يعكس هوية علامتك التجارية، مع إمكانية التعديل حتى الرضى.",
-// 159 images:["https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500","https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=500","https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500","https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=500"],
-// 160 phone:"212600000000"},
-// 161 {id:9, title:"دراجة هوائية كهربائية", category:"أخرى", price:"4500 درهم",
-// 162 desc:"دراجة كهربائية ببطارية تدوم 60 كم، محرك 250 واط، مناسبة للتنقل اليومي بكل سهولة.",
-// 163 images:["https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=500","https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500","https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=500","https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500"],
-// 164 phone:"212600000000"},
-// 165 {id:10, title:"ماكينة صنع القهوة", category:"إلكترونيات", price:"650 درهم",
-// 166 desc:"ماكينة قهوة أوتوماتيكية بضغط 15 بار، تحضير قهوة غنية وكريمة بلمسة زر واحدة.",
-// 167 images:["https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500","https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500","https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=500","https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=500"],
-// 168 phone:"212600000000"}
-// 169 ];
-// 170 function sanitizeText(text) {
-// 171 const el = document.createElement('div');
-// 172 el.textContent = text;
-// 173 return el.innerHTML;
-// 174 }
-// 175 function normalizeProduct(p) {
-// 176 if (!p.images && p.img) p.images = [p.img, p.img, p.img, p.img];
-// 177 return p;
-// 178 }
-// 179 function getProducts() {
-// 180 let stored = localStorage.getItem('larashProducts');
-// 181 if (stored) {
-// 182 try {
-// 183 let parsed = JSON.parse(stored);
-// 184 let all = [...defaultProducts];
-// 185 parsed.forEach(p => {
-// 186 if (!all.some(d => d.id === p.id)) {
-// 187 normalizeProduct(p);
-// 188 all.push(p);
-// 189 }
-// 190 });
-// 191 return all;
-// 192 } catch(e) { return defaultProducts.map(normalizeProduct); }
-// 193 }
-// 194 return defaultProducts.map(normalizeProduct);
-// 195 }
-// 196 function saveProducts(arr) {
-// 197 let added = arr.filter(p => p.id > 10);
-// 198 localStorage.setItem('larashProducts', JSON.stringify(added));
-// 199 }
-// 200 let allProducts = getProducts();
-// 201 let selected = null;
-// 202 function previewImage(input, previewId) {
-// 203 const preview = document.getElementById(previewId);
-// 204 preview.innerHTML = '';
-// 205 if (input.files && input.files[0]) {
-// 206 const reader = new FileReader();
-// 207 reader.onload = e => {
-// 208 const img = document.createElement('img');
-// 209 img.src = e.target.result;
-// 210 preview.appendChild(img);
-// 211 };
-// 212 reader.readAsDataURL(input.files[0]);
-// 213 }
-// 214 }
-// 215 function render(items) {
-// 216 const grid = document.getElementById('grid');
-// 217 grid.innerHTML = '';
-// 218 if (!items.length) {
-// 219 grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0">لا توجد منتجات.</p>';
-// 220 return;
-// 221 }
-// 222 items.forEach(p => {
-// 223 const card = document.createElement('div');
-// 224 card.className = 'product-card';
-// 225 card.onclick = () => openDetail(p);
-// 226 const imgSrc = (p.images && p.images.length) ? p.images[0] : 'https://placehold.co/400x200?text=صورة';
-// 227 card.innerHTML = `
-// 228 <img src="${imgSrc}" class="product-img" onerror="this.src='https://placehold.co/400x200?text=صورة'">
-// 229 <div class="product-info">
-// 230 <h4 class="product-title">${sanitizeText(p.title)}</h4>
-// 231 <p class="product-desc">${sanitizeText(p.desc)}</p>
-// 232 <div class="product-price-row">
-// 233 <span class="price">${sanitizeText(p.price)}</span>
-// 234 <button class="add-btn" onclick="event.stopPropagation();openDetail(${JSON.stringify(p).replace(/"/g,'&quot;')})">+</button>
-// 235 </div>
-// 236 </div>`;
-// 237 grid.appendChild(card);
-// 238 });
-// 239 }
-// 240 function filter(cat, btn) {
-// 241 document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-// 242 if (btn) btn.classList.add('active');
-// 243 else document.querySelectorAll('.cat-btn').forEach(b => { if (b.innerText === cat) b.classList.add('active'); });
-// 244 applyFilter(cat);
-// 245 }
-// 246 function applyFilter(cat) {
-// 247 const q = document.getElementById('search').value.toLowerCase().trim();
-// 248 let filtered = allProducts;
-// 249 if (cat && cat !== 'الكل') filtered = filtered.filter(p => p.category === cat);
-// 250 else {
-// 251 const active = document.querySelector('.cat-btn.active');
-// 252 if (active && active.innerText !== 'الكل') filtered = filtered.filter(p => p.category === active.innerText);
-// 253 }
-// 254 if (q) filtered = filtered.filter(p => p.title.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q));
-// 255 render(filtered);
-// 256 }
-// 257 document.getElementById('search').addEventListener('input', function() { applyFilter(); });
-// 258 function openDetail(p) {
-// 259 selected = p;
-// 260 document.getElementById('dTitle').textContent = p.title;
-// 261 document.getElementById('dDesc').textContent = p.desc;
-// 262 document.getElementById('dPrice').textContent = p.price;
-// 263 const images = (p.images && p.images.length) ? p.images : [p.img || 'https://placehold.co/400x200?text=صورة'];
-// 264 const mainImg = document.getElementById('dImg');
-// 265 const thumbsContainer = document.getElementById('dThumbs');
-// 266 thumbsContainer.innerHTML = '';
-// 267 mainImg.src = images[0] || 'https://placehold.co/400x200?text=صورة';
-// 268 images.forEach((src, i) => {
-// 269 const thumb = document.createElement('img');
-// 270 thumb.src = src;
-// 271 thumb.className = i === 0 ? 'active-thumb' : '';
-// 272 thumb.onerror = function() { this.src = 'https://placehold.co/60x60?text=خطأ'; };
-// 273 thumb.onclick = function(e) {
-// 274 e.stopPropagation();
-// 275 mainImg.src = src;
-// 276 document.querySelectorAll('.gallery-thumbs img').forEach(t => t.classList.remove('active-thumb'));
-// 277 this.classList.add('active-thumb');
-// 278 };
-// 279 thumbsContainer.appendChild(thumb);
-// 280 });
-// 281 document.getElementById('detailModal').classList.add('active');
-// 282 }
-// 283 function closeDetail(e) {
-// 284 if (e && e.target !== document.getElementById('detailModal')) return;
-// 285 document.getElementById('detailModal').classList.remove('active');
-// 286 }
-// 287 function order() {
-// 288 if (!selected) return;
-// 289 let phone = selected.phone || '212600000000';
-// 290 let msg = `مرحباً، أود طلب المنتج:\n- ${selected.title}\n- السعر: ${selected.price}`;
-// 291 window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
-// 292 }
-// 293 function openPublish() {
-// 294 document.getElementById('publishModal').classList.add('active');
-// 295 document.getElementById('pubForm').reset();
-// 296 ['preview1','preview2','preview3','preview4'].forEach(id => document.getElementById(id).innerHTML = '');
-// 297 }
-// 298 function closePublish(e) {
-// 299 if (e && e.target !== document.getElementById('publishModal')) return;
-// 300 document.getElementById('publishModal').classList.remove('active');
-// 301 }
-// 302 function handlePublish(e) {
-// 303 e.preventDefault();
-// 304 const title = document.getElementById('pTitle').value.trim();
-// 305 const cat = document.getElementById('pCat').value;
-// 306 const price = document.getElementById('pPrice').value.trim();
-// 307 const desc = document.getElementById('pDesc').value.trim();
-// 308 const phone = document.getElementById('pPhone').value.trim();
-// 309 const fileInputs = ['pImg1', 'pImg2', 'pImg3', 'pImg4'];
-// 310 const files = fileInputs.map(id => document.getElementById(id).files[0]).filter(f => f);
-// 311 if (!title || !price || !desc || !phone) { alert('الحقول المطلوبة: الاسم، السعر، الوصف، رقم الهاتف.'); return; }
-// 312 if (files.length === 0) { alert('الرجاء اختيار صورة أساسية على الأقل.'); return; }
-// 313 const promises = files.map(file => new Promise((resolve, reject) => {
-// 314 const reader = new FileReader();
-// 315 reader.onload = e => resolve(e.target.result);
-// 316 reader.onerror = reject;
-// 317 reader.readAsDataURL(file);
-// 318 }));
-// 319 Promise.all(promises).then(images => {
-// 320 const newP = { id: Date.now(), title, category: cat, price, desc, images, phone };
-// 321 allProducts.push(newP);
-// 322 saveProducts(allProducts);
-// 323 applyFilter();
-// 324 closePublish();
-// 325 showToast('تم نشر المنتج بنجاح! 🎉');
-// 326 }).catch(() => alert('حدث خطأ أثناء قراءة الصور.'));
-// 327 }
-// 328 function showToast(msg) {
-// 329 const t = document.getElementById('toast');
-// 330 t.textContent = msg;
-// 331 t.classList.add('show');
-// 332 clearTimeout(t._timer);
-// 333 t._timer = setTimeout(() => t.classList.remove('show'), 3000);
-// 334 }
-// 335 function openPopup() {
-// 336 document.getElementById('popupOverlay').classList.add('active');
-// 337 }
-// 338 function closePopup() {
-// 339 document.getElementById('popupOverlay').classList.remove('active');
-// 340 }
-// 341 document.querySelectorAll('.cat-btn').forEach(b => { if (b.innerText === 'الكل') b.classList.add('active'); });
-// 342 applyFilter('الكل');
-// 343 setTimeout(openPopup, 1500);
-// 344 </script>
-<!-- 345 --> </body>
-<!-- 346 --> </html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>العرائش ماركت</title>
+<style>
+:root{--primary:#2563eb;--hover:#1d4ed8;--bg:#f8fafc;--card:#fff;--text:#0f172a;--muted:#64748b;--border:#e2e8f0;--accent:#ef4444;--radius:12px;--trans:all 0.3s}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI',sans-serif}
+body{background:var(--bg);color:var(--text);padding-bottom:60px}
+header{background:var(--card);padding:15px;position:sticky;top:0;z-index:100;box-shadow:0 2px 10px rgba(0,0,0,0.05);border-bottom:1px solid var(--border)}
+.header-container{display:flex;justify-content:space-between;align-items:center;max-width:800px;margin:0 auto}
+.logo{font-size:1.2rem;font-weight:800;color:var(--primary)}
+.publish-btn{background:var(--primary);color:#fff;border:none;padding:8px 16px;border-radius:20px;font-size:.9rem;font-weight:600;cursor:pointer;transition:var(--trans);display:flex;align-items:center;gap:6px}
+.publish-btn:hover{background:var(--hover);transform:scale(1.02)}
+.search-box{margin-top:10px}
+.search-box input{width:100%;padding:12px 40px 12px 15px;border:1px solid var(--border);border-radius:var(--radius);outline:none;font-size:.95rem;transition:var(--trans)}
+.search-box input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,0.15)}
+.categories{display:flex;gap:10px;overflow-x:auto;padding:10px 0;scrollbar-width:none}
+.categories::-webkit-scrollbar{display:none}
+.cat-btn{background:var(--card);border:1px solid var(--border);padding:8px 16px;border-radius:20px;font-size:.85rem;white-space:nowrap;cursor:pointer;transition:var(--trans)}
+.cat-btn.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+main{max-width:800px;margin:0 auto;padding:15px}
+.products-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:var(--trans);cursor:pointer}
+.product-card:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,0.05)}
+.product-img{width:100%;height:140px;object-fit:cover;background:#f1f5f9}
+.product-info{padding:12px;display:flex;flex-direction:column;flex-grow:1}
+.product-title{font-size:.95rem;font-weight:700;margin-bottom:5px;color:var(--text)}
+.product-desc{font-size:.8rem;color:var(--muted);margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.product-price-row{display:flex;justify-content:space-between;align-items:center;margin-top:auto}
+.price{font-weight:800;color:var(--accent);font-size:1rem}
+.add-btn{background:var(--primary);color:#fff;border:none;width:32px;height:32px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:var(--trans)}
+.add-btn:hover{background:var(--hover)}
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:var(--trans);z-index:1000}
+.modal-overlay.active{opacity:1;pointer-events:auto}
+.modal-content{background:var(--card);width:100%;max-width:500px;border-top-left-radius:20px;border-top-right-radius:20px;padding:20px;transform:translateY(100%);transition:var(--trans);max-height:85vh;overflow-y:auto}
+.modal-overlay.active .modal-content{transform:translateY(0)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
+.close-btn{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted)}
+.modal-img{width:100%;height:220px;object-fit:cover;border-radius:var(--radius);margin-bottom:15px}
+.buy-now-btn{background:var(--primary);color:#fff;border:none;width:100%;padding:14px;border-radius:var(--radius);font-size:1rem;font-weight:700;cursor:pointer;margin-top:20px;transition:var(--trans)}
+.buy-now-btn:hover{background:var(--hover)}
+.publish-form label{display:block;font-weight:600;margin-top:12px;margin-bottom:4px;font-size:.9rem}
+.publish-form input,.publish-form textarea,.publish-form select{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:var(--radius);font-size:.95rem;background:var(--bg);transition:var(--trans)}
+.publish-form input:focus,.publish-form textarea:focus,.publish-form select:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(37,99,235,0.15);background:#fff}
+.publish-form textarea{resize:vertical;min-height:80px}
+.submit-btn{background:var(--primary);color:#fff;border:none;width:100%;padding:14px;border-radius:var(--radius);font-size:1rem;font-weight:700;cursor:pointer;margin-top:20px;transition:var(--trans)}
+.submit-btn:hover{background:var(--hover)}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;padding:12px 24px;border-radius:var(--radius);font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.15);opacity:0;transition:opacity .4s;z-index:2000;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+<header>
+<div class="header-container">
+<div class="logo">🛒 العرائش ماركت</div>
+<button class="publish-btn" onclick="openPublish()">➕ نشر منتج</button>
+</div>
+<div class="search-box"><input type="text" id="search" placeholder="ابحث عن منتجك المفضل..."></div>
+<div class="categories" id="cats">
+<button class="cat-btn active" onclick="filter('الكل',this)">الكل</button>
+<button class="cat-btn" onclick="filter('إلكترونيات',this)">إلكترونيات</button>
+<button class="cat-btn" onclick="filter('ملابس',this)">ملابس</button>
+<button class="cat-btn" onclick="filter('خدمات',this)">خدمات</button>
+</div>
+</header>
+<main><div class="products-grid" id="grid"></div></main>
+
+<div class="modal-overlay" id="detailModal" onclick="closeDetail(event)">
+<div class="modal-content" onclick="event.stopPropagation()">
+<div class="modal-header"><h3 id="dTitle"></h3><button class="close-btn" onclick="closeDetail()">&times;</button></div>
+<img src="" id="dImg" class="modal-img">
+<p id="dDesc" style="color:var(--muted);line-height:1.6;margin-bottom:15px"></p>
+<div style="display:flex;justify-content:space-between;align-items:center"><span>السعر:</span><span id="dPrice" style="font-size:1.3rem;font-weight:800;color:var(--accent)"></span></div>
+<button class="buy-now-btn" onclick="order()">اطلب الآن عبر واتساب</button>
+</div>
+</div>
+
+<div class="modal-overlay" id="publishModal" onclick="closePublish(event)">
+<div class="modal-content" onclick="event.stopPropagation()">
+<div class="modal-header"><h3>📦 نشر منتج جديد</h3><button class="close-btn" onclick="closePublish()">&times;</button></div>
+<form class="publish-form" id="pubForm" onsubmit="handlePublish(event)">
+<label>اسم المنتج *</label><input type="text" id="pTitle" required>
+<label>الفئة *</label><select id="pCat" required><option>إلكترونيات</option><option>ملابس</option><option>خدمات</option><option>أخرى</option></select>
+<label>السعر *</label><input type="text" id="pPrice" required>
+<label>الوصف *</label><textarea id="pDesc" required></textarea>
+<label>رابط الصورة</label><input type="url" id="pImg" value="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500">
+<label>رقم الهاتف (واتساب) *</label><input type="tel" id="pPhone" required>
+<button type="submit" class="submit-btn">✅ نشر المنتج</button>
+</form>
+</div>
+</div>
+
+<div class="toast" id="toast">تم النشر!</div>
+
+<script>
+const defaultProducts = [
+{id:1,title:"سماعات لاسلكية برو",category:"إلكترونيات",price:"250 درهم",desc:"سماعات عازلة للصوت بجودة عالية، تدوم 18 ساعة.",img:"https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500",phone:"212600000000"},
+{id:2,title:"ساعة يد ذكية",category:"إلكترونيات",price:"399 درهم",desc:"تتبع النشاط والقلب وإشعارات الهاتف بشاشة AMOLED.",img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500",phone:"212600000000"},
+{id:3,title:"سترة رياضية",category:"ملابس",price:"180 درهم",desc:"خفيفة ومريحة للجري والأنشطة اليومية، مقاسات متعددة.",img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500",phone:"212600000000"},
+{id:4,title:"تطوير تطبيقات",category:"خدمات",price:"اتصل لتحديد السعر",desc:"نصمم تطبيق متجرك الخاص بأندرويد بكفاءة عالية.",img:"https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500",phone:"212600000000"},
+{id:5,title:"هاتف 5G 128GB",category:"إلكترونيات",price:"2800 درهم",desc:"شاشة 6.5 بوصة، كاميرا 48 ميجابكسل، بطارية 4500 مللي.",img:"https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500",phone:"212600000000"},
+{id:6,title:"تابلت للدراسة",category:"إلكترونيات",price:"1200 درهم",desc:"شاشة 10.4 بوصة، معالج ثماني النواة، 4 جيجا رام.",img:"https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?w=500",phone:"212600000000"},
+{id:7,title:"حقيبة ظهر للابتوب",category:"ملابس",price:"220 درهم",desc:"حقيبة متينة بجيوب متعددة لحماية جهاز حتى 15.6 بوصة.",img:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500",phone:"212600000000"},
+{id:8,title:"تصميم شعارات",category:"خدمات",price:"350 درهم",desc:"تصميم شعار عصري وفريد يعكس هوية علامتك التجارية.",img:"https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500",phone:"212600000000"}
+];
+
+function getProducts(){let stored=localStorage.getItem('larashProducts');if(stored){try{let parsed=JSON.parse(stored);let all=[...defaultProducts];parsed.forEach(p=>{if(!all.some(d=>d.id===p.id))all.push(p);});return all;}catch(e){return[...defaultProducts];}}return[...defaultProducts];}
+function saveProducts(arr){let added=arr.filter(p=>p.id>8);localStorage.setItem('larashProducts',JSON.stringify(added));}
+
+let allProducts=getProducts();
+let selected=null;
+
+function render(items){
+const grid=document.getElementById('grid');
+grid.innerHTML='';
+if(!items.length){grid.innerHTML='<p style="grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0">لا توجد منتجات.</p>';return;}
+items.forEach(p=>{
+const card=document.createElement('div');
+card.className='product-card';
+card.onclick=()=>openDetail(p);
+card.innerHTML=`
+<img src="${p.img}" class="product-img" onerror="this.src='https://placehold.co/400x200?text=صورة'">
+<div class="product-info">
+<h4 class="product-title">${p.title}</h4>
+<p class="product-desc">${p.desc}</p>
+<div class="product-price-row">
+<span class="price">${p.price}</span>
+<button class="add-btn" onclick="event.stopPropagation();openDetail(${JSON.stringify(p).replace(/"/g,'&quot;')})">+</button>
+</div>
+</div>`;
+grid.appendChild(card);
+});
+}
+
+function filter(cat,btn){
+document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+if(btn)btn.classList.add('active');
+else document.querySelectorAll('.cat-btn').forEach(b=>{if(b.innerText===cat)b.classList.add('active');});
+applyFilter(cat);
+}
+
+function applyFilter(cat){
+const q=document.getElementById('search').value.toLowerCase();
+let filtered=allProducts;
+if(cat&&cat!=='الكل')filtered=filtered.filter(p=>p.category===cat);
+else{const active=document.querySelector('.cat-btn.active');if(active&&active.innerText!=='الكل')filtered=filtered.filter(p=>p.category===active.innerText);}
+if(q)filtered=filtered.filter(p=>p.title.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q));
+render(filtered);
+}
+
+document.getElementById('search').addEventListener('input',function(){applyFilter();});
+
+function openDetail(p){
+selected=p;
+document.getElementById('dTitle').innerText=p.title;
+document.getElementById('dImg').src=p.img;
+document.getElementById('dDesc').innerText=p.desc;
+document.getElementById('dPrice').innerText=p.price;
+document.getElementById('detailModal').classList.add('active');
+}
+function closeDetail(e){if(e&&e.target!==document.getElementById('detailModal'))return;document.getElementById('detailModal').classList.remove('active');}
+function order(){if(!selected)return;let phone=selected.phone||'212600000000';let msg=`مرحباً، أود طلب المنتج:\n- ${selected.title}\n- السعر: ${selected.price}`;window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,'_blank');}
+
+function openPublish(){document.getElementById('publishModal').classList.add('active');document.getElementById('pubForm').reset();document.getElementById('pImg').value='https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500';}
+function closePublish(e){if(e&&e.target!==document.getElementById('publishModal'))return;document.getElementById('publishModal').classList.remove('active');}
+function handlePublish(e){
+e.preventDefault();
+let title=document.getElementById('pTitle').value.trim();
+let cat=document.getElementById('pCat').value;
+let price=document.getElementById('pPrice').value.trim();
+let desc=document.getElementById('pDesc').value.trim();
+let img=document.getElementById('pImg').value.trim()||'https://placehold.co/400x200?text=صورة';
+let phone=document.getElementById('pPhone').value.trim();
+if(!title||!price||!desc||!phone){alert('جميع الحقول مطلوبة.');return;}
+let newP={id:Date.now(),title,category:cat,price,desc,img,phone};
+allProducts.push(newP);
+saveProducts(allProducts);
+applyFilter();
+closePublish();
+showToast('تم نشر المنتج بنجاح! 🎉');
+}
+
+function showToast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),3000);}
+
+// init
+document.querySelectorAll('.cat-btn').forEach(b=>{if(b.innerText==='الكل')b.classList.add('active');});
+applyFilter('الكل');
+</script>
+</body>
+</html>
