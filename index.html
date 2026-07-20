@@ -38,7 +38,12 @@ main{max-width:800px;margin:0 auto;padding:15px}
 .modal-overlay.active .modal-content{transform:translateY(0)}
 .modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}
 .close-btn{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--muted)}
-.modal-img{width:100%;height:220px;object-fit:cover;border-radius:var(--radius);margin-bottom:15px}
+.modal-img-container{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:10px;scrollbar-width:thin}
+.modal-img{min-width:100%;height:220px;object-fit:cover;border-radius:var(--radius);flex-shrink:0}
+.modal-thumbs{display:flex;gap:6px;overflow-x:auto;padding:5px 0}
+.modal-thumb{width:60px;height:60px;object-fit:cover;border-radius:6px;border:2px solid transparent;cursor:pointer;transition:var(--trans)}
+.modal-thumb.active{border-color:var(--primary)}
+.modal-thumb:hover{border-color:var(--primary)}
 .buy-now-btn{background:var(--primary);color:#fff;border:none;width:100%;padding:14px;border-radius:var(--radius);font-size:1rem;font-weight:700;cursor:pointer;margin-top:20px;transition:var(--trans)}
 .buy-now-btn:hover{background:var(--hover)}
 .publish-form label{display:block;font-weight:600;margin-top:12px;margin-bottom:4px;font-size:.9rem}
@@ -47,6 +52,10 @@ main{max-width:800px;margin:0 auto;padding:15px}
 .publish-form textarea{resize:vertical;min-height:80px}
 .submit-btn{background:var(--primary);color:#fff;border:none;width:100%;padding:14px;border-radius:var(--radius);font-size:1rem;font-weight:700;cursor:pointer;margin-top:20px;transition:var(--trans)}
 .submit-btn:hover{background:var(--hover)}
+.preview-grid{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.preview-item{position:relative;width:70px;height:70px;border-radius:8px;overflow:hidden;border:1px solid var(--border)}
+.preview-item img{width:100%;height:100%;object-fit:cover}
+.preview-item .remove-img{position:absolute;top:2px;right:2px;background:rgba(0,0,0,0.6);color:#fff;border:none;border-radius:50%;width:20px;height:20px;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#22c55e;color:#fff;padding:12px 24px;border-radius:var(--radius);font-weight:600;box-shadow:0 4px 12px rgba(0,0,0,0.15);opacity:0;transition:opacity .4s;z-index:2000;pointer-events:none}
 .toast.show{opacity:1}
 </style>
@@ -67,16 +76,21 @@ main{max-width:800px;margin:0 auto;padding:15px}
 </header>
 <main><div class="products-grid" id="grid"></div></main>
 
+<!-- نافذة تفاصيل المنتج -->
 <div class="modal-overlay" id="detailModal" onclick="closeDetail(event)">
 <div class="modal-content" onclick="event.stopPropagation()">
 <div class="modal-header"><h3 id="dTitle"></h3><button class="close-btn" onclick="closeDetail()">&times;</button></div>
-<img src="" id="dImg" class="modal-img">
+<div class="modal-img-container" id="dImgContainer">
+    <img src="" id="dImg" class="modal-img" style="display:block;">
+</div>
+<div class="modal-thumbs" id="dThumbs"></div>
 <p id="dDesc" style="color:var(--muted);line-height:1.6;margin-bottom:15px"></p>
 <div style="display:flex;justify-content:space-between;align-items:center"><span>السعر:</span><span id="dPrice" style="font-size:1.3rem;font-weight:800;color:var(--accent)"></span></div>
 <button class="buy-now-btn" onclick="order()">اطلب الآن عبر واتساب</button>
 </div>
 </div>
 
+<!-- نافذة نشر منتج -->
 <div class="modal-overlay" id="publishModal" onclick="closePublish(event)">
 <div class="modal-content" onclick="event.stopPropagation()">
 <div class="modal-header"><h3>📦 نشر منتج جديد</h3><button class="close-btn" onclick="closePublish()">&times;</button></div>
@@ -85,7 +99,11 @@ main{max-width:800px;margin:0 auto;padding:15px}
 <label>الفئة *</label><select id="pCat" required><option>إلكترونيات</option><option>ملابس</option><option>خدمات</option><option>أخرى</option></select>
 <label>السعر *</label><input type="text" id="pPrice" required>
 <label>الوصف *</label><textarea id="pDesc" required></textarea>
-<label>رابط الصورة</label><input type="url" id="pImg" value="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500">
+<label>صور المنتج (اختر 1 إلى 4 صور)</label>
+<input type="file" id="pImages" accept="image/*" multiple onchange="previewImages(event)">
+<div class="preview-grid" id="previewGrid"></div>
+<label style="margin-top:8px;">أو أدخل رابط صورة واحدة (اختياري)</label>
+<input type="url" id="pImg" placeholder="https://example.com/image.jpg">
 <label>رقم الهاتف (واتساب) *</label><input type="tel" id="pPhone" required>
 <button type="submit" class="submit-btn">✅ نشر المنتج</button>
 </form>
@@ -96,97 +114,278 @@ main{max-width:800px;margin:0 auto;padding:15px}
 
 <script>
 const defaultProducts = [
-{id:1,title:"سماعات لاسلكية برو",category:"إلكترونيات",price:"250 درهم",desc:"سماعات عازلة للصوت بجودة عالية، تدوم 18 ساعة.",img:"https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500",phone:"212600000000"},
-{id:2,title:"ساعة يد ذكية",category:"إلكترونيات",price:"399 درهم",desc:"تتبع النشاط والقلب وإشعارات الهاتف بشاشة AMOLED.",img:"https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500",phone:"212600000000"},
-{id:3,title:"سترة رياضية",category:"ملابس",price:"180 درهم",desc:"خفيفة ومريحة للجري والأنشطة اليومية، مقاسات متعددة.",img:"https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500",phone:"212600000000"},
-{id:4,title:"تطوير تطبيقات",category:"خدمات",price:"اتصل لتحديد السعر",desc:"نصمم تطبيق متجرك الخاص بأندرويد بكفاءة عالية.",img:"https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500",phone:"212600000000"},
-{id:5,title:"هاتف 5G 128GB",category:"إلكترونيات",price:"2800 درهم",desc:"شاشة 6.5 بوصة، كاميرا 48 ميجابكسل، بطارية 4500 مللي.",img:"https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500",phone:"212600000000"},
-{id:6,title:"تابلت للدراسة",category:"إلكترونيات",price:"1200 درهم",desc:"شاشة 10.4 بوصة، معالج ثماني النواة، 4 جيجا رام.",img:"https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?w=500",phone:"212600000000"},
-{id:7,title:"حقيبة ظهر للابتوب",category:"ملابس",price:"220 درهم",desc:"حقيبة متينة بجيوب متعددة لحماية جهاز حتى 15.6 بوصة.",img:"https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500",phone:"212600000000"},
-{id:8,title:"تصميم شعارات",category:"خدمات",price:"350 درهم",desc:"تصميم شعار عصري وفريد يعكس هوية علامتك التجارية.",img:"https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500",phone:"212600000000"}
+{id:1,title:"سماعات لاسلكية برو",category:"إلكترونيات",price:"250 درهم",desc:"سماعات عازلة للصوت بجودة عالية، تدوم 18 ساعة.",images:["https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500"],phone:"212600000000"},
+{id:2,title:"ساعة يد ذكية",category:"إلكترونيات",price:"399 درهم",desc:"تتبع النشاط والقلب وإشعارات الهاتف بشاشة AMOLED.",images:["https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500"],phone:"212600000000"},
+{id:3,title:"سترة رياضية",category:"ملابس",price:"180 درهم",desc:"خفيفة ومريحة للجري والأنشطة اليومية، مقاسات متعددة.",images:["https://images.unsplash.com/photo-1551028719-00167b16eac5?w=500"],phone:"212600000000"},
+{id:4,title:"تطوير تطبيقات",category:"خدمات",price:"اتصل لتحديد السعر",desc:"نصمم تطبيق متجرك الخاص بأندرويد بكفاءة عالية.",images:["https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=500"],phone:"212600000000"},
+{id:5,title:"هاتف 5G 128GB",category:"إلكترونيات",price:"2800 درهم",desc:"شاشة 6.5 بوصة، كاميرا 48 ميجابكسل، بطارية 4500 مللي.",images:["https://images.unsplash.com/photo-1598327105666-5b89351aff97?w=500"],phone:"212600000000"},
+{id:6,title:"تابلت للدراسة",category:"إلكترونيات",price:"1200 درهم",desc:"شاشة 10.4 بوصة، معالج ثماني النواة، 4 جيجا رام.",images:["https://images.unsplash.com/photo-1585790050230-5dd28404ccb9?w=500"],phone:"212600000000"},
+{id:7,title:"حقيبة ظهر للابتوب",category:"ملابس",price:"220 درهم",desc:"حقيبة متينة بجيوب متعددة لحماية جهاز حتى 15.6 بوصة.",images:["https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=500"],phone:"212600000000"},
+{id:8,title:"تصميم شعارات",category:"خدمات",price:"350 درهم",desc:"تصميم شعار عصري وفريد يعكس هوية علامتك التجارية.",images:["https://images.unsplash.com/photo-1561070791-2526d30994b5?w=500"],phone:"212600000000"}
 ];
 
-function getProducts(){let stored=localStorage.getItem('larashProducts');if(stored){try{let parsed=JSON.parse(stored);let all=[...defaultProducts];parsed.forEach(p=>{if(!all.some(d=>d.id===p.id))all.push(p);});return all;}catch(e){return[...defaultProducts];}}return[...defaultProducts];}
-function saveProducts(arr){let added=arr.filter(p=>p.id>8);localStorage.setItem('larashProducts',JSON.stringify(added));}
+// تحويل المنتجات القديمة التي تحتوي على حقل `img` إلى `images`
+defaultProducts.forEach(p => {
+    if (p.img && !p.images) {
+        p.images = [p.img];
+        delete p.img;
+    }
+    if (!p.images) p.images = [];
+});
 
-let allProducts=getProducts();
-let selected=null;
+function getProducts(){
+    let stored = localStorage.getItem('larashProducts');
+    if (stored) {
+        try {
+            let parsed = JSON.parse(stored);
+            let all = [...defaultProducts];
+            parsed.forEach(p => {
+                // تأكد من أن للمنتج خاصية images
+                if (!p.images) p.images = [];
+                if (!all.some(d => d.id === p.id)) all.push(p);
+            });
+            return all;
+        } catch(e) { return [...defaultProducts]; }
+    }
+    return [...defaultProducts];
+}
+function saveProducts(arr){
+    let added = arr.filter(p => p.id > 8);
+    localStorage.setItem('larashProducts', JSON.stringify(added));
+}
+
+let allProducts = getProducts();
+let selected = null;
+let selectedImageIndex = 0;
 
 function render(items){
-const grid=document.getElementById('grid');
-grid.innerHTML='';
-if(!items.length){grid.innerHTML='<p style="grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0">لا توجد منتجات.</p>';return;}
-items.forEach(p=>{
-const card=document.createElement('div');
-card.className='product-card';
-card.onclick=()=>openDetail(p);
-card.innerHTML=`
-<img src="${p.img}" class="product-img" onerror="this.src='https://placehold.co/400x200?text=صورة'">
-<div class="product-info">
-<h4 class="product-title">${p.title}</h4>
-<p class="product-desc">${p.desc}</p>
-<div class="product-price-row">
-<span class="price">${p.price}</span>
-<button class="add-btn" onclick="event.stopPropagation();openDetail(${JSON.stringify(p).replace(/"/g,'&quot;')})">+</button>
-</div>
-</div>`;
-grid.appendChild(card);
-});
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+    if (!items.length) {
+        grid.innerHTML = '<p style="grid-column:1/-1;text-align:center;color:var(--muted);padding:40px 0">لا توجد منتجات.</p>';
+        return;
+    }
+    items.forEach(p => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.onclick = () => openDetail(p);
+        const firstImg = p.images && p.images.length ? p.images[0] : 'https://placehold.co/400x200?text=صورة';
+        card.innerHTML = `
+        <img src="${firstImg}" class="product-img" onerror="this.src='https://placehold.co/400x200?text=صورة'">
+        <div class="product-info">
+            <h4 class="product-title">${p.title}</h4>
+            <p class="product-desc">${p.desc}</p>
+            <div class="product-price-row">
+                <span class="price">${p.price}</span>
+                <button class="add-btn" onclick="event.stopPropagation();openDetail(${JSON.stringify(p).replace(/"/g,'&quot;')})">+</button>
+            </div>
+        </div>`;
+        grid.appendChild(card);
+    });
 }
 
 function filter(cat,btn){
-document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
-if(btn)btn.classList.add('active');
-else document.querySelectorAll('.cat-btn').forEach(b=>{if(b.innerText===cat)b.classList.add('active');});
-applyFilter(cat);
+    document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+    else document.querySelectorAll('.cat-btn').forEach(b=>{if(b.innerText===cat) b.classList.add('active');});
+    applyFilter(cat);
 }
 
 function applyFilter(cat){
-const q=document.getElementById('search').value.toLowerCase();
-let filtered=allProducts;
-if(cat&&cat!=='الكل')filtered=filtered.filter(p=>p.category===cat);
-else{const active=document.querySelector('.cat-btn.active');if(active&&active.innerText!=='الكل')filtered=filtered.filter(p=>p.category===active.innerText);}
-if(q)filtered=filtered.filter(p=>p.title.toLowerCase().includes(q)||p.desc.toLowerCase().includes(q));
-render(filtered);
+    const q = document.getElementById('search').value.toLowerCase();
+    let filtered = allProducts;
+    if (cat && cat !== 'الكل') filtered = filtered.filter(p => p.category === cat);
+    else {
+        const active = document.querySelector('.cat-btn.active');
+        if (active && active.innerText !== 'الكل') filtered = filtered.filter(p => p.category === active.innerText);
+    }
+    if (q) filtered = filtered.filter(p => p.title.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q));
+    render(filtered);
 }
 
-document.getElementById('search').addEventListener('input',function(){applyFilter();});
+document.getElementById('search').addEventListener('input', function(){ applyFilter(); });
 
 function openDetail(p){
-selected=p;
-document.getElementById('dTitle').innerText=p.title;
-document.getElementById('dImg').src=p.img;
-document.getElementById('dDesc').innerText=p.desc;
-document.getElementById('dPrice').innerText=p.price;
-document.getElementById('detailModal').classList.add('active');
+    selected = p;
+    selectedImageIndex = 0;
+    document.getElementById('dTitle').innerText = p.title;
+    document.getElementById('dDesc').innerText = p.desc;
+    document.getElementById('dPrice').innerText = p.price;
+    
+    // عرض الصور
+    const container = document.getElementById('dImgContainer');
+    const thumbs = document.getElementById('dThumbs');
+    container.innerHTML = '';
+    thumbs.innerHTML = '';
+    
+    if (p.images && p.images.length) {
+        p.images.forEach((img, index) => {
+            const imgEl = document.createElement('img');
+            imgEl.src = img;
+            imgEl.className = 'modal-img';
+            if (index !== 0) imgEl.style.display = 'none';
+            imgEl.dataset.index = index;
+            container.appendChild(imgEl);
+            
+            const thumb = document.createElement('img');
+            thumb.src = img;
+            thumb.className = 'modal-thumb' + (index === 0 ? ' active' : '');
+            thumb.dataset.index = index;
+            thumb.onclick = (e) => { e.stopPropagation(); showImage(index); };
+            thumbs.appendChild(thumb);
+        });
+        // حدث التمرير لتغيير الصورة (اختياري)
+        container.onscroll = function() {
+            // يمكن إضافة سلوك تغيير النشاط حسب التمرير
+        };
+    } else {
+        // صورة افتراضية
+        const imgEl = document.createElement('img');
+        imgEl.src = 'https://placehold.co/500x300?text=صورة';
+        imgEl.className = 'modal-img';
+        container.appendChild(imgEl);
+    }
+    
+    document.getElementById('detailModal').classList.add('active');
 }
-function closeDetail(e){if(e&&e.target!==document.getElementById('detailModal'))return;document.getElementById('detailModal').classList.remove('active');}
-function order(){if(!selected)return;let phone=selected.phone||'212600000000';let msg=`مرحباً، أود طلب المنتج:\n- ${selected.title}\n- السعر: ${selected.price}`;window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,'_blank');}
 
-function openPublish(){document.getElementById('publishModal').classList.add('active');document.getElementById('pubForm').reset();document.getElementById('pImg').value='https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=500';}
-function closePublish(e){if(e&&e.target!==document.getElementById('publishModal'))return;document.getElementById('publishModal').classList.remove('active');}
-function handlePublish(e){
-e.preventDefault();
-let title=document.getElementById('pTitle').value.trim();
-let cat=document.getElementById('pCat').value;
-let price=document.getElementById('pPrice').value.trim();
-let desc=document.getElementById('pDesc').value.trim();
-let img=document.getElementById('pImg').value.trim()||'https://placehold.co/400x200?text=صورة';
-let phone=document.getElementById('pPhone').value.trim();
-if(!title||!price||!desc||!phone){alert('جميع الحقول مطلوبة.');return;}
-let newP={id:Date.now(),title,category:cat,price,desc,img,phone};
-allProducts.push(newP);
-saveProducts(allProducts);
-applyFilter();
-closePublish();
-showToast('تم نشر المنتج بنجاح! 🎉');
+function showImage(index){
+    const images = document.querySelectorAll('#dImgContainer .modal-img');
+    const thumbs = document.querySelectorAll('#dThumbs .modal-thumb');
+    if (index >= images.length) return;
+    images.forEach((img, i) => {
+        img.style.display = i === index ? 'block' : 'none';
+    });
+    thumbs.forEach((thumb, i) => {
+        thumb.classList.toggle('active', i === index);
+    });
+    selectedImageIndex = index;
 }
 
-function showToast(msg){let t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._timer);t._timer=setTimeout(()=>t.classList.remove('show'),3000);}
+function closeDetail(e){ if(e && e.target !== document.getElementById('detailModal')) return; document.getElementById('detailModal').classList.remove('active'); }
+function order(){
+    if(!selected) return;
+    let phone = selected.phone || '212600000000';
+    let msg = `مرحباً، أود طلب المنتج:\n- ${selected.title}\n- السعر: ${selected.price}`;
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
+}
 
-// init
-document.querySelectorAll('.cat-btn').forEach(b=>{if(b.innerText==='الكل')b.classList.add('active');});
-applyFilter('الكل');
-</script>
-</body>
-</html>
+function openPublish(){
+    document.getElementById('publishModal').classList.add('active');
+    document.getElementById('pubForm').reset();
+    document.getElementById('pImg').value = '';
+    document.getElementById('previewGrid').innerHTML = '';
+}
+function closePublish(e){ if(e && e.target !== document.getElementById('publishModal')) return; document.getElementById('publishModal').classList.remove('active'); }
+
+// معاينة الصور المرفوعة (حد أقصى 4)
+let uploadedFiles = [];
+
+function previewImages(event) {
+    const files = event.target.files;
+    const grid = document.getElementById('previewGrid');
+    grid.innerHTML = '';
+    uploadedFiles = [];
+    
+    let total = Math.min(files.length, 4);
+    for (let i = 0; i < total; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const div = document.createElement('div');
+            div.className = 'preview-item';
+            div.innerHTML = `
+                <img src="${e.target.result}">
+                <button class="remove-img" data-index="${i}" onclick="removeImage(${i})">✕</button>
+            `;
+            grid.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+        uploadedFiles.push(file);
+    }
+    // إذا اختار أكثر من 4، نعطي تحذير
+    if (files.length > 4) {
+        showToast('يمكنك اختيار 4 صور كحد أقصى.', 'warning');
+        // نعيد تعيين الإدخال ليحتوي فقط على 4 ملفات
+        const input = document.getElementById('pImages');
+        const dt = new DataTransfer();
+        for (let i = 0; i < 4; i++) {
+            if (files[i]) dt.items.add(files[i]);
+        }
+        input.files = dt.files;
+    }
+}
+
+function removeImage(index) {
+    uploadedFiles.splice(index, 1);
+    const input = document.getElementById('pImages');
+    const dt = new DataTransfer();
+    uploadedFiles.forEach(f => dt.items.add(f));
+    input.files = dt.files;
+    previewImages({ target: input });
+}
+
+// تحويل الملفات إلى base64
+function filesToBase64(files) {
+    return Promise.all(Array.from(files).map(file => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }));
+}
+
+async function handlePublish(e) {
+    e.preventDefault();
+    const title = document.getElementById('pTitle').value.trim();
+    const cat = document.getElementById('pCat').value;
+    const price = document.getElementById('pPrice').value.trim();
+    const desc = document.getElementById('pDesc').value.trim();
+    const phone = document.getElementById('pPhone').value.trim();
+    const imageUrl = document.getElementById('pImg').value.trim();
+    const fileInput = document.getElementById('pImages');
+    const files = fileInput.files;
+
+    let images = [];
+    
+    // استخدام الصور المرفوعة
+    if (files && files.length > 0) {
+        images = await filesToBase64(files);
+    } else if (imageUrl) {
+        images = [imageUrl];
+    } else {
+        images = ['https://placehold.co/400x200?text=صورة'];
+    }
+
+    if (!title || !price || !desc || !phone) {
+        alert('جميع الحقول مطلوبة.');
+        return;
+    }
+
+    const newP = {
+        id: Date.now(),
+        title,
+        category: cat,
+        price,
+        desc,
+        images,
+        phone
+    };
+
+    allProducts.push(newP);
+    saveProducts(allProducts);
+    applyFilter();
+    closePublish();
+    showToast('تم نشر المنتج بنجاح! 🎉');
+    document.getElementById('pubForm').reset();
+    document.getElementById('previewGrid').innerHTML = '';
+    uploadedFiles = [];
+}
+
+function showToast(msg, type='success'){
+    let t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = type === 'warning' ? '#f59e0b' : '#22c55e';
+    t.cla
